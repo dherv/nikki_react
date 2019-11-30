@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Normalize } from "styled-normalize";
-import { GlobalStyle } from "./GlobalStyle";
+import { GlobalStyle } from "./styled/GlobalStyle";
 import Editor from "./pages/Editor";
 import Dailies from "./pages/Dailies";
 import Words from "./pages/Words";
