@@ -1,8 +1,8 @@
 import React from "react";
 import Layout from "../components/layout/Layout";
-const Editor = () => (
+const Dailies = () => (
   <Layout>
-    <h1>Editor</h1>
+    <h1>Dailies</h1>
   </Layout>
 );
-export default Editor;
+export default Dailies;

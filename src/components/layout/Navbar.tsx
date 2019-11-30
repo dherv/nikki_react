@@ -1,22 +1,30 @@
 import React from "react";
 import styled from "styled-components";
-
+import { NavLink } from "react-router-dom";
 const Navbar: React.FC = () => (
   <List>
     <li>
-      <Link href="#">Dailies</Link>
+      <StyledLink exact to="/">
+        Dailies
+      </StyledLink>
     </li>
     <li>
-      <Link href="#">Editor</Link>
+      <StyledLink exact to="/editor">
+        Editor
+      </StyledLink>
     </li>
     <li>
       <Title>Nikki 日記</Title>
     </li>
     <li>
-      <Link href="#">Words</Link>
+      <StyledLink exact to="/words">
+        Words
+      </StyledLink>
     </li>
     <li>
-      <Link href="#">Grammars</Link>
+      <StyledLink exact to="/grammars">
+        Grammars
+      </StyledLink>
     </li>
   </List>
 );
@@ -30,8 +38,11 @@ const List = styled.ul`
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
 `;
 
-const Link = styled.a`
+const StyledLink = styled(NavLink)`
   color: var(--font-color-main);
+  &.active {
+    color: var(--font-color-editor);
+  }
 `;
 
 const Title = styled.h1`

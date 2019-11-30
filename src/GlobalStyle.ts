@@ -4,6 +4,8 @@ export const GlobalStyle = createGlobalStyle`
     :root {
       --font-color-main: #767676;
       --font-color-editor: #212121;
+      --color-main: #26A69A; // rgba(38, 166, 154, 1)
+      --color-main-light: rgba(38, 166, 154, .6)
     }
 
     html {

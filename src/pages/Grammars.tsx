@@ -1,8 +1,8 @@
 import React from "react";
 import Layout from "../components/layout/Layout";
-const Editor = () => (
+const Grammars = () => (
   <Layout>
-    <h1>Editor</h1>
+    <h1>Grammars</h1>
   </Layout>
 );
-export default Editor;
+export default Grammars;
