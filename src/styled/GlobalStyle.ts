@@ -3,10 +3,11 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyle = createGlobalStyle`
     :root {
       --font-main: "Raleway", "Roboto", "Helvetica Neue", Arial, sans-serif;
-      --font-second: "Work Sans", Arial, sans-serif;
-      --font-third: "Open Sans", Arial, sans-serif;
+      --font-work: "Work Sans", Arial, sans-serif;
+      --font-open: "Open Sans", Arial, sans-serif;
       --font-color-main: #767676;
-      --font-color-editor: #212121;
+      --font-color-title: #484848;
+      --font-color-dark: #212121;
       --color-main: #26A69A; // rgba(38, 166, 154, 1)
       --color-main-light: rgba(38, 166, 154, .6)
     }

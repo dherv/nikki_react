@@ -41,10 +41,10 @@ const List = styled.ul`
 const StyledLink = styled(NavLink)`
   color: var(--font-color-main);
   &.active {
-    color: var(--font-color-editor);
+    color: var(--font-color-dark);
   }
 `;
 
 const Title = styled.h1`
-  color: var(--font-color-editor);
+  color: var(--font-color-dark);
 `;

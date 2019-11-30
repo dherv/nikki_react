@@ -19,7 +19,13 @@ export const Aside = styled.aside`
   }
 `;
 
-export const Main = styled.main``;
+export const Main = styled.main`
+  width: 100%;
+  padding: 0 2rem;
+`;
 export const MainTitle = styled.h2`
   font-size: 2rem;
+  border-bottom: 1px solid var(--font-color-title);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
 `;
