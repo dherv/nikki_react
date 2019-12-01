@@ -1,18 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../components/layout/Layout";
 import { Aside, Main, MainTitle } from "../styled/GlobalComponents";
 import styled from "styled-components";
 
-const Editor: React.FC = () => (
-  <Layout>
-    <Aside>left</Aside>
-    <Main>
-      <MainTitle>Editor</MainTitle>
-      <TextArea></TextArea>
-    </Main>
-    <Aside>right</Aside>
-  </Layout>
-);
+const Editor: React.FC = () => {
+  const [selection, setSelection] = useState<string>("");
+  const handleSelection = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // selectionStart and selectionEnd are available on textarea
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
+    const selection = event.target.value.slice(
+      event.target.selectionStart,
+      event.target.selectionEnd
+    );
+    setSelection(selection);
+  };
+  return (
+    <Layout>
+      <Aside>left</Aside>
+      <Main>
+        <MainTitle>Editor</MainTitle>
+        <TextArea
+          onSelect={event =>
+            handleSelection(event as React.ChangeEvent<HTMLTextAreaElement>)
+          }
+        ></TextArea>
+      </Main>
+      <Aside>right</Aside>
+    </Layout>
+  );
+};
 
 const TextArea = styled.textarea`
   width: 100%;
