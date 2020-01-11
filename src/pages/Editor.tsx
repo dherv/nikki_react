@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import Layout from "../components/layout/Layout";
 import { Aside, Main, MainTitle } from "../styled/GlobalComponents";
 import styled from "styled-components";
+import ModalSelect from "../components/modal/ModalSelect";
 
 const Editor: React.FC = () => {
-  const [selection, setSelection] = useState<string>("");
-  const handleSelection = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const [selection, setSelection] = useState<string | null>("");
+  const [status, setModalStatus] = useState<"words" | "grammars" | "">("");
+  const [step, setStep] = useState<number | null>(null);
+
+  const handleSelect = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     // selectionStart and selectionEnd are available on textarea
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
     const selection = event.target.value.slice(
@@ -13,7 +17,67 @@ const Editor: React.FC = () => {
       event.target.selectionEnd
     );
     setSelection(selection);
+    setStep(1);
   };
+
+  const handleClick = (status: "words" | "grammars") => {
+    // set status as words
+    setModalStatus(status);
+    // open the translation modal
+    setStep(2);
+  };
+
+  const clearModalSettings = () => {
+    setSelection(null);
+    setStep(null);
+  };
+
+  const displayModal = () => {
+    // if there is a word selected open the modal
+    if (selection) {
+      let child = null;
+      switch (step) {
+        case 1:
+          child = (
+            <>
+              {selection}
+              <button onClick={() => handleClick("words")}>Words</button>
+              <button onClick={() => handleClick("grammars")}>Grammars</button>
+            </>
+          );
+          break;
+        case 2:
+          child = (
+            <>
+              Translation {selection} {status}
+              <button onClick={() => setStep(3)}>Last</button>
+            </>
+          );
+          break;
+        case 3:
+          child = (
+            <>
+              Finish {selection}
+              <button onClick={() => clearModalSettings()}>Finish</button>
+            </>
+          );
+          break;
+      }
+      return (
+        <ModalSelect clearModalSettings={clearModalSettings}>
+          <div
+            onClick={event => event.stopPropagation()}
+            style={{ backgroundColor: "#fff", width: 400, height: 400 }}
+          >
+            {child}
+          </div>
+        </ModalSelect>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <Layout>
       <Aside>left</Aside>
@@ -21,11 +85,12 @@ const Editor: React.FC = () => {
         <MainTitle>Editor</MainTitle>
         <TextArea
           onSelect={event =>
-            handleSelection(event as React.ChangeEvent<HTMLTextAreaElement>)
+            handleSelect(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
         ></TextArea>
       </Main>
       <Aside>right</Aside>
+      {displayModal()}
     </Layout>
   );
 };

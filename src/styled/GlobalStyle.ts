@@ -11,7 +11,21 @@ export const GlobalStyle = createGlobalStyle`
       --color-main: #26A69A; // rgba(38, 166, 154, 1)
       --color-main-light: rgba(38, 166, 154, .6)
     }
-
+    #modal-root {
+      position: relative;
+      z-index: 999;
+    }
+    .modal {
+      background-color: rgba(0,0,0,0.5);
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     html {
       box-sizing: border-box;
       font-size: 16px;
