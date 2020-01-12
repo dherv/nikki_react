@@ -44,7 +44,6 @@ const ModalSelect: React.FC<{
 };
 
 const ModalTitle = styled.h5`
-  padding: 3rem;
   font-size: 1.4rem;
   font-weight: 100;
   text-align: center;
@@ -53,7 +52,8 @@ const ModalTitle = styled.h5`
 const ModalContainer = styled.div`
   background-color: #fff;
   width: 650px;
-  height: 350px;
+  padding: 3rem;
+  max-height: 90vh;
 `;
 
 const ModalChildrenContainer = styled.div`

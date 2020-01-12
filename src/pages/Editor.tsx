@@ -3,12 +3,12 @@ import Layout from "../components/layout/Layout";
 import { Aside, Main, MainTitle } from "../styled/GlobalComponents";
 import styled from "styled-components";
 import ModalSelect from "../components/modal/ModalSelect";
-import ModalButtonSelect from "../components/modal/ModalButtonSelect";
+
 import {
   EditorModalType,
   EditorModalTranslation,
   EditorModalForm
-} from "../components/editor/EditorModalType";
+} from "../components/editor/EditorModals";
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<string | null>("");
@@ -52,6 +52,7 @@ const Editor: React.FC = () => {
           child = (
             <EditorModalTranslation
               selection={selection}
+              goBack={() => setStep(1)}
               onClick={() => setStep(3)}
             />
           );
@@ -61,7 +62,6 @@ const Editor: React.FC = () => {
           child = (
             <EditorModalForm status={status} onClick={clearModalSettings} />
           );
-
           title = "Edit the form";
           break;
       }
