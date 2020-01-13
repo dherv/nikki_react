@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../components/layout/Layout";
-import { Aside, Main, MainTitle } from "../styled/GlobalComponents";
+import { Main, MainTitle } from "../styled/GlobalComponents";
 import styled from "styled-components";
 import ModalSelect from "../components/modal/ModalSelect";
 
@@ -9,6 +9,7 @@ import {
   EditorModalTranslation,
   EditorModalForm
 } from "../components/editor/EditorModals";
+import { AsideLeft, AsideRight } from "../components/layout/Asides";
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<string | null>("");
@@ -81,7 +82,7 @@ const Editor: React.FC = () => {
 
   return (
     <Layout>
-      <Aside>left</Aside>
+      <AsideLeft title="tips">left</AsideLeft>
       <Main>
         <MainTitle>Editor</MainTitle>
         <TextArea
@@ -90,7 +91,7 @@ const Editor: React.FC = () => {
           }
         ></TextArea>
       </Main>
-      <Aside>right</Aside>
+      <AsideRight title="current selection"></AsideRight>
       {displayModal()}
     </Layout>
   );
