@@ -1,6 +1,19 @@
 import React, { FC } from "react";
 import ModalButtonSelect from "../modal/ModalButtonSelect";
-import styled from "styled-components";
+import Dot from "../ui/Dot";
+import {
+  StyledModalTypeContainer,
+  StyledModalTranslationSelection,
+  StyledModalTranslationContainer,
+  StyledModalTranslationList,
+  StyledModalTranslationListItem,
+  StyledModalButtonContainer,
+  StyledModalButton,
+  StyledModalForm,
+  StyledFormInput,
+  StyledModalFormTitleContainer,
+  StyledModalFormTitle
+} from "./EditorModalsStyles";
 
 export const EditorModalType: FC<{
   onClick: (status: "words" | "grammars") => void;
@@ -15,13 +28,9 @@ export const EditorModalType: FC<{
   </StyledModalTypeContainer>
 );
 
-const StyledModalTypeContainer = styled.div`
-  margin: 3rem 0;
-`;
-
 export const EditorModalTranslation: FC<{
   onClick: () => void;
-  goBack: () => void;
+  goBack: (stepNumber: number) => void;
   selection: string;
 }> = ({ onClick, goBack, selection }) => (
   <>
@@ -40,61 +49,81 @@ export const EditorModalTranslation: FC<{
         <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
         <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
       </StyledModalTranslationList>
-
-      <StyledModalTranslationButtonContainer>
-        <StyledModalTranslationButton onClick={goBack}>
-          back
-        </StyledModalTranslationButton>
-        <StyledModalTranslationButton onClick={onClick}>
-          Skip
-        </StyledModalTranslationButton>
-      </StyledModalTranslationButtonContainer>
+      <StyledModalButtonContainer>
+        <StyledModalButton onClick={() => goBack(1)}>back</StyledModalButton>
+        <StyledModalButton onClick={onClick}>Skip</StyledModalButton>
+      </StyledModalButtonContainer>
     </StyledModalTranslationContainer>
   </>
 );
 
-const StyledModalTranslationSelection = styled.h4`
-  margin: 2rem 0;
-  font-weight: 600;
-`;
-const StyledModalTranslationContainer = styled.div`
-  width: 90%;
-  height: 100%;
-`;
-const StyledModalTranslationList = styled.ul`
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: rgba(196, 196, 196, 0.12);
-`;
-const StyledModalTranslationListItem = styled.li`
-  padding: 1rem;
-  cursor: pointer;
-  &:not(:last-child) {
-    border-bottom: 1px solid #eae5e5;
+export const EditorModalForm: FC<{
+  onClick: () => void;
+  goBack: (stepNumber: number) => void;
+  status: string;
+}> = ({ onClick, status, goBack }) => {
+  let child = null;
+  switch (status) {
+    case "grammars":
+      child = (
+        <StyledModalForm>
+          <StyledFormInput
+            id="selection"
+            type="text"
+            placeholder="Word"
+          ></StyledFormInput>
+          <StyledFormInput
+            id="translation"
+            type="text"
+            placeholder="Translation"
+          ></StyledFormInput>
+          <StyledFormInput
+            id="sentence"
+            type="text"
+            placeholder="Example Sentence"
+          ></StyledFormInput>
+          <StyledFormInput
+            as="textarea"
+            id="explanation"
+            placeholder="Explanation"
+            rows={3}
+          ></StyledFormInput>
+        </StyledModalForm>
+      );
+      break;
+    default:
+      child = (
+        <StyledModalForm>
+          <StyledFormInput
+            id="selection"
+            type="text"
+            placeholder="Word"
+          ></StyledFormInput>
+          <StyledFormInput
+            id="translation"
+            type="text"
+            placeholder="Translation"
+          ></StyledFormInput>
+          <StyledFormInput
+            id="sentence"
+            type="text"
+            placeholder="Example Sentence"
+          ></StyledFormInput>
+        </StyledModalForm>
+      );
+      break;
   }
-`;
-const StyledModalTranslationButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-`;
-const StyledModalTranslationButton = styled.button`
-  background-color: #26A69A
-  color: #fff;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: .5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer
-`;
-
-export const EditorModalForm: FC<{ onClick: () => void; status: string }> = ({
-  onClick,
-  status
-}) => (
-  <>
-    <h4>{status}</h4>
-    <button onClick={() => onClick()}>Finish</button>
-  </>
-);
+  return (
+    <>
+      <StyledModalFormTitleContainer>
+        <Dot fill={status === "grammars" ? "#F0D64D" : "#8558B1"}></Dot>
+        <StyledModalFormTitle>{status}</StyledModalFormTitle>
+      </StyledModalFormTitleContainer>
+      {child}
+      <StyledModalButtonContainer>
+        <StyledModalButton onClick={() => goBack(2)}>back</StyledModalButton>
+        <StyledModalButton onClick={onClick}>Save</StyledModalButton>
+      </StyledModalButtonContainer>
+    </>
+  );
+};

@@ -52,7 +52,7 @@ const Editor: React.FC = () => {
           child = (
             <EditorModalTranslation
               selection={selection}
-              goBack={() => setStep(1)}
+              goBack={setStep}
               onClick={() => setStep(3)}
             />
           );
@@ -60,7 +60,11 @@ const Editor: React.FC = () => {
           break;
         case 3:
           child = (
-            <EditorModalForm status={status} onClick={clearModalSettings} />
+            <EditorModalForm
+              status={status}
+              onClick={clearModalSettings}
+              goBack={setStep}
+            />
           );
           title = "Edit the form";
           break;

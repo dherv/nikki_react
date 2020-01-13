@@ -56,11 +56,6 @@ const ModalContainer = styled.div`
   max-height: 90vh;
 `;
 
-const ModalChildrenContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+const ModalChildrenContainer = styled.div``;
 
 export default ModalSelect;
