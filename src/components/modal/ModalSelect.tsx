@@ -9,27 +9,25 @@ const ModalSelect: React.FC<{
   const modalRoot = document.createElement("div");
 
   useLayoutEffect(() => {
-    const previousModalRoot = document.getElementById("modal-root");
-    if (previousModalRoot) {
-      document.body.removeChild(previousModalRoot);
-    }
+    removeDOMModal();
     modalRoot.setAttribute("id", "modal-root");
     document.body.appendChild(modalRoot);
     return () => {
-      const lastModal = document.getElementById("modal-root");
-      if (lastModal) {
-        document.body.removeChild(lastModal);
-      }
+      removeDOMModal();
     };
   });
 
-  const closeModal = () => {
-    clearModalSettings();
-    // remove dom element on unmount
+  const removeDOMModal = () => {
     const modalRoot = document.getElementById("modal-root");
     if (modalRoot) {
       document.body.removeChild(modalRoot);
     }
+  };
+
+  const closeModal = () => {
+    clearModalSettings();
+    // remove dom element on unmount
+    removeDOMModal();
   };
 
   return ReactDOM.createPortal(
