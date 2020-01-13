@@ -4,6 +4,12 @@ import { Aside, Main, MainTitle } from "../styled/GlobalComponents";
 import styled from "styled-components";
 import ModalSelect from "../components/modal/ModalSelect";
 
+import {
+  EditorModalType,
+  EditorModalTranslation,
+  EditorModalForm
+} from "../components/editor/EditorModals";
+
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<string | null>("");
   const [status, setModalStatus] = useState<"words" | "grammars" | "">("");
@@ -36,41 +42,36 @@ const Editor: React.FC = () => {
     // if there is a word selected open the modal
     if (selection) {
       let child = null;
+      let title = "";
       switch (step) {
         case 1:
-          child = (
-            <>
-              {selection}
-              <button onClick={() => handleClick("words")}>Words</button>
-              <button onClick={() => handleClick("grammars")}>Grammars</button>
-            </>
-          );
+          child = <EditorModalType onClick={handleClick} />;
+          title = "Choose the selection type";
           break;
         case 2:
           child = (
-            <>
-              Translation {selection} {status}
-              <button onClick={() => setStep(3)}>Last</button>
-            </>
+            <EditorModalTranslation
+              selection={selection}
+              goBack={setStep}
+              onClick={() => setStep(3)}
+            />
           );
+          title = "Select the translation";
           break;
         case 3:
           child = (
-            <>
-              Finish {selection}
-              <button onClick={() => clearModalSettings()}>Finish</button>
-            </>
+            <EditorModalForm
+              status={status}
+              onClick={clearModalSettings}
+              goBack={setStep}
+            />
           );
+          title = "Edit the form";
           break;
       }
       return (
-        <ModalSelect clearModalSettings={clearModalSettings}>
-          <div
-            onClick={event => event.stopPropagation()}
-            style={{ backgroundColor: "#fff", width: 400, height: 400 }}
-          >
-            {child}
-          </div>
+        <ModalSelect title={title} clearModalSettings={clearModalSettings}>
+          {child}
         </ModalSelect>
       );
     } else {
