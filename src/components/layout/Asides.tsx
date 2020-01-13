@@ -21,6 +21,7 @@ export const AsideLeft: FC<{ title: string }> = ({ children, title }) => {
 };
 
 const StyledAsideTitle = styled.h4`
+  margin-bottom: 2rem;
   font-size: 1.25rem;
   text-transform: capitalize;
 `;

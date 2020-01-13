@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, ChangeEvent } from "react";
 import ModalButtonSelect from "../modal/ModalButtonSelect";
 import Dot from "../ui/Dot";
 import {
@@ -14,6 +14,7 @@ import {
   StyledModalFormTitleContainer,
   StyledModalFormTitle
 } from "./EditorModalsStyles";
+import { ISelection } from "../../interfaces/interfaces";
 
 export const EditorModalType: FC<{
   onClick: (status: "words" | "grammars") => void;
@@ -29,7 +30,7 @@ export const EditorModalType: FC<{
 );
 
 export const EditorModalTranslation: FC<{
-  onClick: () => void;
+  onClick: (translation: string) => void;
   goBack: (stepNumber: number) => void;
   selection: string;
 }> = ({ onClick, goBack, selection }) => (
@@ -39,54 +40,98 @@ export const EditorModalTranslation: FC<{
     </StyledModalTranslationSelection>
     <StyledModalTranslationContainer>
       <StyledModalTranslationList>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
-        <StyledModalTranslationListItem>test</StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
+        <StyledModalTranslationListItem onClick={() => onClick("test")}>
+          test
+        </StyledModalTranslationListItem>
       </StyledModalTranslationList>
       <StyledModalButtonContainer>
         <StyledModalButton onClick={() => goBack(1)}>back</StyledModalButton>
-        <StyledModalButton onClick={onClick}>Skip</StyledModalButton>
+        <StyledModalButton onClick={() => onClick("")}>Skip</StyledModalButton>
       </StyledModalButtonContainer>
     </StyledModalTranslationContainer>
   </>
 );
 
 export const EditorModalForm: FC<{
-  onClick: () => void;
+  onClick: ({
+    name,
+    translation,
+    sentence,
+    explanation,
+    type
+  }: ISelection) => void;
   goBack: (stepNumber: number) => void;
   status: string;
-}> = ({ onClick, status, goBack }) => {
+  passedTranslation: string;
+  passedSelection: string;
+}> = ({ onClick, status, passedSelection, passedTranslation, goBack }) => {
+  const [name, setName] = useState<string>(passedSelection);
+  const [translation, setTranslation] = useState<string>(passedTranslation);
+  const [sentence, setSentence] = useState<string>("");
+  const [explanation, setExplanation] = useState<string>("");
+
   let child = null;
+
   switch (status) {
     case "grammars":
       child = (
         <StyledModalForm>
           <StyledFormInput
-            id="selection"
+            id="name"
+            name="name"
             type="text"
             placeholder="Word"
+            value={name}
+            onChange={({ target }) => setName(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             id="translation"
+            name="translation"
             type="text"
             placeholder="Translation"
+            value={translation}
+            onChange={({ target }) => setTranslation(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             id="sentence"
+            name="sentence"
             type="text"
             placeholder="Example Sentence"
+            onChange={({ target }) => setSentence(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             as="textarea"
             id="explanation"
+            name="explanation"
             placeholder="Explanation"
             rows={3}
+            onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+              setExplanation(event.target.value)
+            }
           ></StyledFormInput>
         </StyledModalForm>
       );
@@ -95,19 +140,27 @@ export const EditorModalForm: FC<{
       child = (
         <StyledModalForm>
           <StyledFormInput
-            id="selection"
+            id="name"
+            name="name"
             type="text"
             placeholder="Word"
+            value={name}
+            onChange={({ target }) => setName(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             id="translation"
+            name="translation"
             type="text"
             placeholder="Translation"
+            value={translation}
+            onChange={({ target }) => setTranslation(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             id="sentence"
+            name="sentence"
             type="text"
             placeholder="Example Sentence"
+            onChange={({ target }) => setSentence(target.value)}
           ></StyledFormInput>
         </StyledModalForm>
       );
@@ -116,13 +169,19 @@ export const EditorModalForm: FC<{
   return (
     <>
       <StyledModalFormTitleContainer>
-        <Dot fill={status === "grammars" ? "#F0D64D" : "#8558B1"}></Dot>
+        <Dot typeOrColor={status}></Dot>
         <StyledModalFormTitle>{status}</StyledModalFormTitle>
       </StyledModalFormTitleContainer>
       {child}
       <StyledModalButtonContainer>
         <StyledModalButton onClick={() => goBack(2)}>back</StyledModalButton>
-        <StyledModalButton onClick={onClick}>Save</StyledModalButton>
+        <StyledModalButton
+          onClick={() =>
+            onClick({ name, translation, sentence, explanation, type: status })
+          }
+        >
+          Save
+        </StyledModalButton>
       </StyledModalButtonContainer>
     </>
   );

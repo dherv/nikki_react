@@ -3,18 +3,21 @@ import Layout from "../components/layout/Layout";
 import { Main, MainTitle } from "../styled/GlobalComponents";
 import styled from "styled-components";
 import ModalSelect from "../components/modal/ModalSelect";
-
 import {
   EditorModalType,
   EditorModalTranslation,
   EditorModalForm
 } from "../components/editor/EditorModals";
 import { AsideLeft, AsideRight } from "../components/layout/Asides";
+import Dot from "../components/ui/Dot";
+import { ISelection } from "../interfaces/interfaces";
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<string | null>("");
   const [status, setModalStatus] = useState<"words" | "grammars" | "">("");
   const [step, setStep] = useState<number | null>(null);
+  const [translation, setTranslation] = useState<string>("");
+  const [saved, setSaved] = useState<ISelection[]>([]);
 
   const handleSelect = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     // selectionStart and selectionEnd are available on textarea
@@ -34,9 +37,37 @@ const Editor: React.FC = () => {
     setStep(2);
   };
 
+  const handleTranslation = (translation: string) => {
+    setTranslation(translation);
+    setStep(3);
+  };
+
   const clearModalSettings = () => {
     setSelection(null);
+    setTranslation("");
     setStep(null);
+  };
+
+  const saveSelection = (toSave: {
+    name: string;
+    translation: string;
+    sentence: string;
+    explanation?: string;
+    type: string;
+  }) => {
+    // take selection and translation and inputs
+    const addToSaved = {
+      ...toSave,
+      status
+    };
+
+    let savedCopy = [...saved].map(a => ({ ...a }));
+    const newSavedArray = [...savedCopy, addToSaved];
+
+    setSaved(newSavedArray);
+    setTranslation("");
+
+    clearModalSettings();
   };
 
   const displayModal = () => {
@@ -54,7 +85,7 @@ const Editor: React.FC = () => {
             <EditorModalTranslation
               selection={selection}
               goBack={setStep}
-              onClick={() => setStep(3)}
+              onClick={handleTranslation}
             />
           );
           title = "Select the translation";
@@ -63,7 +94,9 @@ const Editor: React.FC = () => {
           child = (
             <EditorModalForm
               status={status}
-              onClick={clearModalSettings}
+              passedTranslation={translation}
+              passedSelection={selection}
+              onClick={saveSelection}
               goBack={setStep}
             />
           );
@@ -80,6 +113,15 @@ const Editor: React.FC = () => {
     }
   };
 
+  const displayAsideRight = () => {
+    return saved.map(s => (
+      <AsideRightListItem>
+        <Dot typeOrColor={s.type}></Dot>
+        <AsideRightListItemText>{s.name}</AsideRightListItemText>
+      </AsideRightListItem>
+    ));
+  };
+
   return (
     <Layout>
       <AsideLeft title="tips">left</AsideLeft>
@@ -91,12 +133,20 @@ const Editor: React.FC = () => {
           }
         ></TextArea>
       </Main>
-      <AsideRight title="current selection"></AsideRight>
+      <AsideRight title="current selection">
+        <ul>{displayAsideRight()}</ul>
+      </AsideRight>
       {displayModal()}
     </Layout>
   );
 };
 
+const AsideRightListItem = styled.li`
+  margin: 1rem 0;
+`;
+const AsideRightListItemText = styled.span`
+  margin-left: 1rem;
+`;
 const TextArea = styled.textarea`
   width: 100%;
   min-height: 30vmax;

@@ -5,7 +5,7 @@ export const StyledAside = styled.aside`
   min-width: 250px;
   max-width: 300px;
   padding: 1rem;
-  background-color: cyan;
+
   /* Now we have our methods on media and can use them instead of raw queries */
   ${media.desktop} {
     display: none;
