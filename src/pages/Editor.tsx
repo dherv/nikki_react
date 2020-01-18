@@ -8,19 +8,18 @@ import {
   EditorModalTranslation,
   EditorModalForm
 } from "../components/editor/EditorModals";
-import { AsideLeft, AsideRight } from "../components/layout/Asides";
-import Dot from "../components/ui/Dot";
-import { ISelection } from "../interfaces/interfaces";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBatteryHalf,
-  faFont,
-  faCheckCircle
-} from "@fortawesome/free-solid-svg-icons";
+  AsideLeft,
+  AsideRight,
+  AsideLeftDefault
+} from "../components/layout/Asides";
+import { ISelection } from "../interfaces/interfaces";
+
+import DotWithWord from "../components/ui/DotWithWord";
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<string | null>("");
-  const [status, setModalStatus] = useState<"words" | "grammars" | "">("");
+  const [status, setModalStatus] = useState<"words" | "grammars">("words");
   const [step, setStep] = useState<number | null>(null);
   const [translation, setTranslation] = useState<string>("");
   const [saved, setSaved] = useState<ISelection[]>([]);
@@ -54,17 +53,11 @@ const Editor: React.FC = () => {
     setStep(null);
   };
 
-  const saveSelection = (toSave: {
-    name: string;
-    translation: string;
-    sentence: string;
-    explanation?: string;
-    type: string;
-  }) => {
+  const saveSelection = (toSave: ISelection) => {
+    console.log(toSave);
     // take selection and translation and inputs
     const addToSaved = {
-      ...toSave,
-      status
+      ...toSave
     };
 
     let savedCopy = [...saved].map(a => ({ ...a }));
@@ -120,58 +113,18 @@ const Editor: React.FC = () => {
   };
 
   const displayAsideRight = () => {
-    return saved.map(s => (
-      <StyledAsideRightListItem>
-        <Dot typeOrColor={s.type}></Dot>
-        <StyledAsideRightListItemText>{s.name}</StyledAsideRightListItemText>
-      </StyledAsideRightListItem>
-    ));
-  };
-
-  const displayAsideLeft = () => {
     return (
-      <div>
-        <StyledAsideDescriptionList>
-          <StyledAsideDescriptionTitle>Weak Words</StyledAsideDescriptionTitle>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescriptionTitle>
-            Mastered Words
-          </StyledAsideDescriptionTitle>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescriptionTitle>
-            Weak Grammars
-          </StyledAsideDescriptionTitle>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescriptionTitle>
-            Mastered Grammars
-          </StyledAsideDescriptionTitle>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-        </StyledAsideDescriptionList>
-        <StyledAsideStatistics>
-          <StyledAsideStatisticsContainer>
-            <StyledAsideStatisticsIcon icon={faBatteryHalf} />
-            <StyledAsideStatisticsSpan>75%</StyledAsideStatisticsSpan>
-          </StyledAsideStatisticsContainer>
-          <StyledAsideStatisticsContainer>
-            <StyledAsideStatisticsIcon icon={faFont} />
-            <StyledAsideStatisticsSpan>78 words</StyledAsideStatisticsSpan>
-          </StyledAsideStatisticsContainer>
-          <StyledAsideStatisticsContainer>
-            <StyledAsideStatisticsIcon icon={faCheckCircle} />
-            <StyledAsideStatisticsSpan>78 words</StyledAsideStatisticsSpan>
-          </StyledAsideStatisticsContainer>
-        </StyledAsideStatistics>
-      </div>
+      <ul>
+        {saved.map((s, i) => (
+          <StyledDotWithWordListItem key={`${i}_${s.name}`}>
+            <DotWithWord typeOrColor={s.type} word={s.name}></DotWithWord>
+          </StyledDotWithWordListItem>
+        ))}
+      </ul>
     );
   };
+
+  const displayAsideLeft = () => <AsideLeftDefault />;
 
   return (
     <Layout>
@@ -190,44 +143,15 @@ const Editor: React.FC = () => {
   );
 };
 
-const StyledAsideStatistics = styled.div`
-  margin-top: 3rem;
-  font-weight: 500;
-  color: var(--color-main-light);
-`;
-const StyledAsideStatisticsContainer = styled.div`
+const StyledDotWithWordListItem = styled.li`
   margin: 1rem 0;
 `;
-const StyledAsideStatisticsSpan = styled.span`
-  margin-left: 1rem;
-`;
-const StyledAsideStatisticsIcon = styled(FontAwesomeIcon)`
-  width: 1rem !important;
-`;
-const StyledAsideDescriptionList = styled.dl`
-  font-family: var(--font-work);
-  font-size: 14px;
-  color: var(--font-color-title);
-`;
-const StyledAsideDescriptionTitle = styled.dt`
-margin: 1.25rem 0
-font-family: var(--font-main);
-  color: var(--font-color-title);
-`;
-const StyledAsideDescription = styled.dd`
-  margin: 12px 0;
-`;
-const StyledAsideRightListItem = styled.li`
-  margin: 1rem 0;
-`;
-const StyledAsideRightListItemText = styled.span`
-  margin-left: 1rem;
-`;
+
 const TextArea = styled.textarea`
   width: 100%;
   min-height: 30vmax;
   padding: 2rem;
-  font-family: var(--font-work);
+  font-family: var(--font-text);
   color: var(--font-color-dark);
   border-radius: 8px;
   border: 1px solid rgba(118, 118, 118, 0.2);
