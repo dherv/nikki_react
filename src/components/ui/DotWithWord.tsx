@@ -8,11 +8,11 @@ const DotWithWord: FC<{ typeOrColor: "words" | "grammars"; word: string }> = ({
 }) => (
   <>
     <Dot typeOrColor={typeOrColor}></Dot>
-    <StyledDotWithWordText>{word}</StyledDotWithWordText>
+    <StyledText>{word}</StyledText>
   </>
 );
 
-const StyledDotWithWordText = styled.span`
+const StyledText = styled.span`
   margin-left: 1rem;
 `;
 

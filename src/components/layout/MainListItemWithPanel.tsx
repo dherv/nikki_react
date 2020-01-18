@@ -5,17 +5,25 @@ import {
   faAngleDoubleUp
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IWord } from "../../types/interfaces";
+import { IWord, IDaily } from "../../types/interfaces";
 
 const MainListItemWithPanel: FC<{
   additionalText: string;
-  itemDetails: IWord;
+  itemDetails: IWord | IDaily;
   itemIndex: number;
-}> = ({ children, additionalText, itemDetails, itemIndex }) => {
+  listItemPrepend?: React.ReactElement;
+  listItemPanelContent: React.ReactElement;
+}> = ({
+  additionalText,
+  itemDetails,
+  itemIndex,
+  listItemPrepend,
+  listItemPanelContent
+}) => {
   const [showIndexDetails, setShowIndexDetails] = useState<number | null>();
   return (
     <>
-      <StyledMainListItemWithPanel
+      <StyledListItem
         onClick={() =>
           showIndexDetails === itemIndex
             ? setShowIndexDetails(null)
@@ -23,65 +31,73 @@ const MainListItemWithPanel: FC<{
         }
       >
         <div>
-          {children}
-          <StyledWordAdditional>{additionalText}</StyledWordAdditional>
+          {listItemPrepend ? (
+            <StyleListItemPrepend>{listItemPrepend}</StyleListItemPrepend>
+          ) : null}
+          <StyledName>{itemDetails.name}</StyledName>
+          <StyledAdditionalText>{additionalText}</StyledAdditionalText>
         </div>
-        <StyledWordAngleDownIcon>
+        <StyledAngleDownIcon>
           {showIndexDetails === itemIndex ? (
             <FontAwesomeIcon icon={faAngleDoubleUp}></FontAwesomeIcon>
           ) : (
             <FontAwesomeIcon icon={faAngleDoubleDown}></FontAwesomeIcon>
           )}
-        </StyledWordAngleDownIcon>
-      </StyledMainListItemWithPanel>
+        </StyledAngleDownIcon>
+      </StyledListItem>
       {showIndexDetails === itemIndex ? (
-        <StyledWordDetails>
-          <p>{itemDetails.example}</p>
-          <p>
-            <span>Added on the {itemDetails.createdAt}</span>{" "}
-            <span>used {itemDetails.timesUsed} times</span>
-          </p>
-        </StyledWordDetails>
+        <StyledPanel>{listItemPanelContent}</StyledPanel>
       ) : null}
     </>
   );
 };
 
-const StyledWordAngleDownIcon = styled.div`
+const StyledAngleDownIcon = styled.div`
   display: none;
   color: var(--font-color-main);
   opacity: 0.3;
   margin-left: auto;
 `;
 
-const StyledMainListItemWithPanel = styled.li`
+const StyledListItem = styled.li`
   display: flex;
   padding: 1rem 0;
   cursor: pointer;
   // prevent user-select on multiple click
   user-select: none;
-  &:hover ${StyledWordAngleDownIcon} {
+  &:hover ${StyledAngleDownIcon} {
     display: block;
   }
 `;
 
-const StyledWordAdditional = styled.span`
+const StyledAdditionalText = styled.span`
   display: inline-block;
   margin-left: 2rem;
   font-family: var(--font-text);
+  font-weight: 300;
   color: var(--font-color-main);
 `;
 
-const StyledWordDetails = styled.div`
+const StyledPanel = styled.div`
   font-family: var(--font-text);
   color: var(--font-color-main);
   p {
     margin: 0.5rem 0;
+    font-weight: 300;
   }
   span {
     font-size: 12px;
     font-weight: 300;
   }
+`;
+
+const StyledName = styled.span`
+  color: var(--font-color-dark);
+  font-weight: 600;
+`;
+
+const StyleListItemPrepend = styled.span`
+  margin-right: 1rem;
 `;
 
 export default MainListItemWithPanel;

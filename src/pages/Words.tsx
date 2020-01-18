@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Layout from "../components/layout/Layout";
 import {
   AsideLeft,
@@ -7,9 +7,9 @@ import {
   AsideRecentDailies
 } from "../components/layout/Asides";
 import { Main, MainTitle } from "../styled/GlobalComponents";
-import DotWithWord from "../components/ui/DotWithWord";
 import { IWord } from "../types/interfaces";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
+import Dot from "../components/ui/Dot";
 
 const Words = () => {
   const sampleWords: ReadonlyArray<IWord> = [
@@ -32,6 +32,17 @@ const Words = () => {
   ];
   const displayAsideLeft = () => <AsideLeftDefault />;
   const displayAsideRight = () => <AsideRecentDailies />;
+  const displayListItemPanel = (itemDetails: IWord) => {
+    return (
+      <>
+        <p>{itemDetails.example}</p>
+        <p>
+          <span>Added on the {itemDetails.createdAt}</span>{" "}
+          <span>used {itemDetails.timesUsed} times</span>
+        </p>
+      </>
+    );
+  };
   return (
     <Layout>
       <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft>
@@ -39,16 +50,14 @@ const Words = () => {
         <MainTitle>Words</MainTitle>
         <ul>
           {sampleWords.map((w, i) => (
-            <>
-              <MainListItemWithPanel
-                key={`${i}_${w.name}`}
-                itemIndex={i}
-                additionalText={w.translation}
-                itemDetails={w}
-              >
-                <DotWithWord typeOrColor={w.type} word={w.name}></DotWithWord>
-              </MainListItemWithPanel>
-            </>
+            <MainListItemWithPanel
+              key={`${i}_${w.name}`}
+              itemIndex={i}
+              additionalText={w.translation}
+              itemDetails={w}
+              listItemPrepend={<Dot typeOrColor={w.type}></Dot>}
+              listItemPanelContent={displayListItemPanel(w)}
+            ></MainListItemWithPanel>
           ))}
         </ul>
       </Main>

@@ -14,3 +14,9 @@ export interface IWord {
   example: string;
   timesUsed: number;
 }
+
+export interface IDaily {
+  name: string;
+  createdAt: string;
+  text: string;
+}
