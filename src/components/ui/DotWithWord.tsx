@@ -15,9 +15,5 @@ const DotWithWord: FC<{ typeOrColor: "words" | "grammars"; word: string }> = ({
 const StyledDotWithWordText = styled.span`
   margin-left: 1rem;
 `;
-// export to use it if needed in different modules
-export const StyledDotWithWordListItem = styled.li`
-  margin: 1rem 0;
-`;
 
 export default DotWithWord;

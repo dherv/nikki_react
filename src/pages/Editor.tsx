@@ -9,24 +9,13 @@ import {
   EditorModalForm
 } from "../components/editor/EditorModals";
 import {
-  StyledAsideDescriptionList,
-  StyledAsideDescriptionTitle,
-  StyledAsideDescription,
-  StyledAsideStatistics,
-  StyledAsideStatisticsContainer,
-  StyledAsideStatisticsIcon,
-  StyledAsideStatisticsSpan
-} from "../components/layout/AsidesStyles";
-import { AsideLeft, AsideRight } from "../components/layout/Asides";
+  AsideLeft,
+  AsideRight,
+  AsideLeftDefault
+} from "../components/layout/Asides";
 import { ISelection } from "../interfaces/interfaces";
-import {
-  faBatteryHalf,
-  faFont,
-  faCheckCircle
-} from "@fortawesome/free-solid-svg-icons";
-import DotWithWord, {
-  StyledDotWithWordListItem
-} from "../components/ui/DotWithWord";
+
+import DotWithWord from "../components/ui/DotWithWord";
 
 const Editor: React.FC = () => {
   const [selection, setSelection] = useState<string | null>("");
@@ -135,50 +124,7 @@ const Editor: React.FC = () => {
     );
   };
 
-  const displayAsideLeft = () => {
-    return (
-      <div>
-        <StyledAsideDescriptionList>
-          <StyledAsideDescriptionTitle>Weak Words</StyledAsideDescriptionTitle>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescriptionTitle>
-            Mastered Words
-          </StyledAsideDescriptionTitle>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescription>word1</StyledAsideDescription>
-          <StyledAsideDescriptionTitle>
-            Weak Grammars
-          </StyledAsideDescriptionTitle>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescriptionTitle>
-            Mastered Grammars
-          </StyledAsideDescriptionTitle>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-          <StyledAsideDescription>grammar1</StyledAsideDescription>
-        </StyledAsideDescriptionList>
-        <StyledAsideStatistics>
-          <StyledAsideStatisticsContainer>
-            <StyledAsideStatisticsIcon icon={faBatteryHalf} />
-            <StyledAsideStatisticsSpan>75%</StyledAsideStatisticsSpan>
-          </StyledAsideStatisticsContainer>
-          <StyledAsideStatisticsContainer>
-            <StyledAsideStatisticsIcon icon={faFont} />
-            <StyledAsideStatisticsSpan>78 words</StyledAsideStatisticsSpan>
-          </StyledAsideStatisticsContainer>
-          <StyledAsideStatisticsContainer>
-            <StyledAsideStatisticsIcon icon={faCheckCircle} />
-            <StyledAsideStatisticsSpan>78 words</StyledAsideStatisticsSpan>
-          </StyledAsideStatisticsContainer>
-        </StyledAsideStatistics>
-      </div>
-    );
-  };
+  const displayAsideLeft = () => <AsideLeftDefault />;
 
   return (
     <Layout>
@@ -196,6 +142,10 @@ const Editor: React.FC = () => {
     </Layout>
   );
 };
+
+const StyledDotWithWordListItem = styled.li`
+  margin: 1rem 0;
+`;
 
 const TextArea = styled.textarea`
   width: 100%;
