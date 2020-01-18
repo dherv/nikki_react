@@ -13,7 +13,7 @@ import {
   AsideRight,
   AsideLeftDefault
 } from "../components/layout/Asides";
-import { ISelection } from "../interfaces/interfaces";
+import { ISelection } from "../types/interfaces";
 
 import DotWithWord from "../components/ui/DotWithWord";
 

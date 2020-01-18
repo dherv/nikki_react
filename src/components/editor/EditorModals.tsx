@@ -14,7 +14,7 @@ import {
   StyledModalFormTitleContainer,
   StyledModalFormTitle
 } from "./EditorModalsStyles";
-import { ISelection } from "../../interfaces/interfaces";
+import { ISelection } from "../../types/interfaces";
 
 export const EditorModalType: FC<{
   onClick: (status: "words" | "grammars") => void;

@@ -8,23 +8,10 @@ import {
 } from "../components/layout/Asides";
 import { Main, MainTitle } from "../styled/GlobalComponents";
 import DotWithWord from "../components/ui/DotWithWord";
-import styled from "styled-components";
-import {
-  faAngleDoubleDown,
-  faAngleDoubleUp
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IWord } from "../types/interfaces";
+import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
 
-interface IWord {
-  name: string;
-  translation: string;
-  type: "words" | "grammars";
-  createdAt: string;
-  example: string;
-  timesUsed: number;
-}
 const Words = () => {
-  const [showIndexDetails, setShowIndexDetails] = useState<number | null>();
   const sampleWords: ReadonlyArray<IWord> = [
     {
       name: "word1",
@@ -53,37 +40,14 @@ const Words = () => {
         <ul>
           {sampleWords.map((w, i) => (
             <>
-              <StyledWordListItem
+              <MainListItemWithPanel
                 key={`${i}_${w.name}`}
-                onClick={() =>
-                  showIndexDetails === i
-                    ? setShowIndexDetails(null)
-                    : setShowIndexDetails(i)
-                }
+                itemIndex={i}
+                additionalText={w.translation}
+                itemDetails={w}
               >
-                <div>
-                  <DotWithWord typeOrColor={w.type} word={w.name}></DotWithWord>
-                  <StyledWordAdditional>{w.translation}</StyledWordAdditional>
-                </div>
-
-                <StyledWordAngleDownIcon>
-                  {showIndexDetails === i ? (
-                    <FontAwesomeIcon icon={faAngleDoubleUp}></FontAwesomeIcon>
-                  ) : (
-                    <FontAwesomeIcon icon={faAngleDoubleDown}></FontAwesomeIcon>
-                  )}
-                </StyledWordAngleDownIcon>
-              </StyledWordListItem>
-
-              {showIndexDetails === i ? (
-                <StyledWordDetails>
-                  <p>{w.example}</p>
-                  <p>
-                    <span>Added on the {w.createdAt}</span>{" "}
-                    <span>used {w.timesUsed} times</span>
-                  </p>
-                </StyledWordDetails>
-              ) : null}
+                <DotWithWord typeOrColor={w.type} word={w.name}></DotWithWord>
+              </MainListItemWithPanel>
             </>
           ))}
         </ul>
@@ -92,42 +56,5 @@ const Words = () => {
     </Layout>
   );
 };
-
-const StyledWordDetails = styled.div`
-  font-family: var(--font-text);
-  color: var(--font-color-main);
-  p {
-    margin: 0.5rem 0;
-  }
-  span {
-    font-size: 12px;
-    font-weight: 300;
-  }
-`;
-
-const StyledWordAngleDownIcon = styled.div`
-  display: none;
-  color: var(--font-color-main);
-  opacity: 0.3;
-  margin-left: auto;
-`;
-
-const StyledWordListItem = styled.li`
-  display: flex;
-  padding: 1rem 0;
-  cursor: pointer;
-  // prevent user-select on multiple click
-  user-select: none;
-  &:hover ${StyledWordAngleDownIcon} {
-    display: block;
-  }
-`;
-
-const StyledWordAdditional = styled.span`
-  display: inline-block;
-  margin-left: 2rem;
-  font-family: var(--font-text);
-  color: var(--font-color-main);
-`;
 
 export default Words;
