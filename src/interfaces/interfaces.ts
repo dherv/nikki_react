@@ -3,5 +3,5 @@ export interface ISelection {
   translation: string;
   sentence: string;
   explanation?: string;
-  type: string;
+  type: "words" | "grammars";
 }

@@ -85,7 +85,7 @@ export const EditorModalForm: FC<{
     type
   }: ISelection) => void;
   goBack: (stepNumber: number) => void;
-  status: string;
+  status: "words" | "grammars";
   passedTranslation: string;
   passedSelection: string;
 }> = ({ onClick, status, passedSelection, passedTranslation, goBack }) => {

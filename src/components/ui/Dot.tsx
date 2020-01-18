@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 
-const Dot: FC<{ typeOrColor: string }> = ({ typeOrColor }) => {
+const Dot: FC<{ typeOrColor: "words" | "grammars" }> = ({ typeOrColor }) => {
   const [fill, setFill] = useState<string | undefined>("");
   useEffect(() => {
     const mapTypeColor = new Map([
