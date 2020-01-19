@@ -28,3 +28,24 @@ font-family: var(--font-main);
 export const StyledAsideDescription = styled.dd`
   margin: 12px 0;
 `;
+
+export const StyledAsideListItem = styled.li`
+  margin: 1rem 0;
+`;
+
+export const StyledAsideListItemRecentDailies = styled.li`
+  margin: 3rem 0;
+  color: var(--font-color-main);
+  h5 {
+    margin: 0.5rem 0 0.75rem 0;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  p {
+    font-weight: 300;
+    text-transform: lowercase;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+`;
