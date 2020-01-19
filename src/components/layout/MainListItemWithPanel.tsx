@@ -11,13 +11,13 @@ const MainListItemWithPanel: FC<{
   additionalText: string;
   itemDetails: IWord | IDaily;
   itemIndex: number;
-  listItemPrepend?: React.ReactElement;
+  listItemContent?: React.ReactElement;
   listItemPanelContent: React.ReactElement;
 }> = ({
   additionalText,
   itemDetails,
   itemIndex,
-  listItemPrepend,
+  listItemContent,
   listItemPanelContent
 }) => {
   const [showIndexDetails, setShowIndexDetails] = useState<number | null>();
@@ -31,11 +31,14 @@ const MainListItemWithPanel: FC<{
         }
       >
         <div>
-          {listItemPrepend ? (
-            <StyleListItemPrepend>{listItemPrepend}</StyleListItemPrepend>
-          ) : null}
-          <StyledName>{itemDetails.name}</StyledName>
-          <StyledAdditionalText>{additionalText}</StyledAdditionalText>
+          {listItemContent ? (
+            listItemContent
+          ) : (
+            <>
+              <StyledName>{itemDetails.name}</StyledName>
+              <StyledAdditionalText>{additionalText}</StyledAdditionalText>
+            </>
+          )}
         </div>
         <StyledAngleDownIcon>
           {showIndexDetails === itemIndex ? (
@@ -94,10 +97,6 @@ const StyledPanel = styled.div`
 const StyledName = styled.span`
   color: var(--font-color-dark);
   font-weight: 600;
-`;
-
-const StyleListItemPrepend = styled.span`
-  margin-right: 1rem;
 `;
 
 export default MainListItemWithPanel;

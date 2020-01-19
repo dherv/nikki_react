@@ -19,4 +19,5 @@ export interface IDaily {
   name: string;
   createdAt: string;
   text: string;
+  words: IWord[]
 }

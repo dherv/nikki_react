@@ -9,7 +9,7 @@ import {
 import { Main, MainTitle } from "../styled/GlobalComponents";
 import { IWord } from "../types/interfaces";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
-import Dot from "../components/ui/Dot";
+import DotWithWord from "../components/ui/DotWithWord";
 
 const Words = () => {
   const sampleWords: ReadonlyArray<IWord> = [
@@ -55,7 +55,13 @@ const Words = () => {
               itemIndex={i}
               additionalText={w.translation}
               itemDetails={w}
-              listItemPrepend={<Dot typeOrColor={w.type}></Dot>}
+              listItemContent={
+                <DotWithWord
+                  typeOrColor={w.type}
+                  word={w.name}
+                  translation={w.translation}
+                />
+              }
               listItemPanelContent={displayListItemPanel(w)}
             ></MainListItemWithPanel>
           ))}

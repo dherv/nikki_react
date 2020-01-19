@@ -117,7 +117,11 @@ const Editor: React.FC = () => {
       <ul>
         {saved.map((s, i) => (
           <StyledDotWithWordListItem key={`${i}_${s.name}`}>
-            <DotWithWord typeOrColor={s.type} word={s.name}></DotWithWord>
+            <DotWithWord
+              typeOrColor={s.type}
+              word={s.name}
+              translation={s.translation}
+            ></DotWithWord>
           </StyledDotWithWordListItem>
         ))}
       </ul>
