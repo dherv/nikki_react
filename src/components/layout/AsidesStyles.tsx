@@ -31,6 +31,9 @@ export const StyledAsideDescription = styled.dd`
 
 export const StyledAsideListItem = styled.li`
   margin: 1rem 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export const StyledAsideListItemRecentDailies = styled.li`

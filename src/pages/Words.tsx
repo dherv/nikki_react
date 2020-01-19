@@ -20,7 +20,7 @@ const Words = () => {
     {
       name: "word1",
       translation: "word1",
-      type: "grammars",
+      type: "words",
       createdAt: "2020/01/01",
       example: "Word 1 example sentence on click",
       timesUsed: 3
