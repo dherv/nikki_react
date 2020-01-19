@@ -67,7 +67,9 @@ const Words = () => {
           ))}
         </ul>
       </Main>
-      <AsideRight title="recent dailies">{displayAsideRight()}</AsideRight>
+      <AsideRight title="recent" subtitle="dailies">
+        {displayAsideRight()}
+      </AsideRight>
     </Layout>
   );
 };

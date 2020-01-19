@@ -16,10 +16,15 @@ import {
   faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
 
-export const AsideRight: FC<{ title: string }> = ({ children, title }) => {
+export const AsideRight: FC<{ title: string; subtitle?: string }> = ({
+  children,
+  title,
+  subtitle
+}) => {
   return (
     <StyledAside>
       <StyledAsideTitle>{title}</StyledAsideTitle>
+      <StyledAsideSubtitle>{subtitle}</StyledAsideSubtitle>
       {children}
     </StyledAside>
   );
@@ -75,9 +80,15 @@ export const AsideLeftDefault: FC<{}> = () => (
 
 export const AsideRecentDailies: FC<{}> = () => <div></div>;
 
-const StyledAsideTitle = styled.h4`
-  margin-bottom: 2rem;
+const StyledAsideTitle = styled.h5`
   font-size: 1.25rem;
+  text-transform: capitalize;
+`;
+const StyledAsideSubtitle = styled.p`
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-family: var(--font-text);
+  color: var(--font-color-main);
   text-transform: capitalize;
 `;
 

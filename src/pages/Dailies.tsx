@@ -81,7 +81,9 @@ const Dailies = () => {
           ))}
         </ul>
       </Main>
-      <AsideRight title="recent dailies">{displayAsideRight()}</AsideRight>
+      <AsideRight title="recent" subtitle="words and grammars">
+        {displayAsideRight()}
+      </AsideRight>
     </Layout>
   );
 };
