@@ -11,6 +11,7 @@ import { Main, MainTitle } from "../styled/GlobalComponents";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
 import { IDaily, IWord } from "../types/interfaces";
 import DotWithWord from "../components/ui/DotWithWord";
+import { StyledAsideListItem } from "../components/layout/AsidesStyles";
 
 const Dailies = () => {
   const sampleWords: Array<IWord> = [
@@ -45,8 +46,25 @@ const Dailies = () => {
       words: sampleWords
     }
   ];
+  const recentWords = [...sampleWords].map(i => ({ ...i }));
   const displayAsideLeft = () => <AsideLeftDefault />;
-  const displayAsideRight = () => <AsideRecentDailies />;
+  const displayAsideRight = () => (
+    <AsideRecentDailies
+      content={
+        <ul>
+          {recentWords.map(w => (
+            <StyledAsideListItem>
+              <DotWithWord
+                typeOrColor={w.type}
+                word={w.name}
+                translation={w.translation}
+              />
+            </StyledAsideListItem>
+          ))}
+        </ul>
+      }
+    />
+  );
   const displayListItemPanel = (itemDetails: IDaily) => (
     <>
       <p>{itemDetails.text}</p>

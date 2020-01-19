@@ -78,7 +78,9 @@ export const AsideLeftDefault: FC<{}> = () => (
   </div>
 );
 
-export const AsideRecentDailies: FC<{}> = () => <div></div>;
+export const AsideRecentDailies: FC<{ content: React.ReactElement }> = ({
+  content
+}) => <StyledAsideContent>{content}</StyledAsideContent>;
 
 const StyledAsideTitle = styled.h5`
   font-size: 1.25rem;
@@ -91,7 +93,9 @@ const StyledAsideSubtitle = styled.p`
   color: var(--font-color-main);
   text-transform: capitalize;
 `;
-
+const StyledAsideContent = styled.div`
+  margin: 3rem 0;
+`;
 const StyledAsideTitleLeft = styled(StyledAsideTitle)`
   font-weight: 600
   font-size: 18px;
