@@ -31,7 +31,6 @@ export interface IGrammar {
 
 export interface IDaily {
   id: number;
-  title: string;
   userId: number;
   languageId: number;
   body: string;

@@ -35,9 +35,6 @@ const MainListItemWithPanel: FC<{
             listItemContent
           ) : (
             <>
-              <StyledName>
-                {itemDetails.title ? itemDetails.title : itemDetails.name}
-              </StyledName>
               <StyledAdditionalText>{additionalText}</StyledAdditionalText>
             </>
           )}
@@ -77,10 +74,9 @@ const StyledListItem = styled.li`
 
 const StyledAdditionalText = styled.span`
   display: inline-block;
-  margin-left: 2rem;
   font-family: var(--font-text);
-  font-weight: 300;
-  color: var(--font-color-main);
+  font-weight: 400;
+  color: var(--font-color-dark);
 `;
 
 const StyledPanel = styled.div`
@@ -94,11 +90,6 @@ const StyledPanel = styled.div`
     font-size: 12px;
     font-weight: 300;
   }
-`;
-
-const StyledName = styled.span`
-  color: var(--font-color-dark);
-  font-weight: 600;
 `;
 
 export default MainListItemWithPanel;

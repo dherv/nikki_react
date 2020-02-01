@@ -62,7 +62,7 @@ const Dailies = () => {
         <ul>
           {dailies.map((d, i) => (
             <MainListItemWithPanel
-              key={`${i}_${d.title}`}
+              key={`${i}_${d.id}`}
               itemIndex={i}
               additionalText={Utils.DateFormat(d.createdAt)}
               itemDetails={d}

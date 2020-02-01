@@ -97,7 +97,6 @@ export const AsideRecentDailies: FC<{}> = () => {
           recentDailies.map(d => (
             <StyledAsideListItemRecentDailies>
               <h4>{Utils.DateFormat(d.createdAt)}</h4>
-              <h5>{d.title}</h5>
               <p>{Utils.TextTruncate(d.body)}</p>
             </StyledAsideListItemRecentDailies>
           ))}
