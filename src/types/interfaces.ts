@@ -7,12 +7,24 @@ export interface ISelection {
 }
 
 export interface IWord {
+  id: number;
   text: string;
   translation: string;
-  type: "words" | "grammars";
-  createdAt: string;
   example: string;
   timesUsed?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IGrammar {
+  id: number;
+  text: string;
+  translation: string;
+  explanation: string;
+  example: string;
+  dailyId: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IDaily {
