@@ -13,17 +13,24 @@ import {
   AsideRight,
   AsideLeftDefault
 } from "../components/layout/Asides";
-import { ISelection } from "../types/interfaces";
+import { ISelection, IGrammar, IWord } from "../types/interfaces";
 
 import DotWithWord from "../components/ui/DotWithWord";
+import Api from "../api/Api";
 
 const Editor: React.FC = () => {
+  const [text, setText] = useState<string>("");
   const [selection, setSelection] = useState<string | null>("");
   const [status, setModalStatus] = useState<"words" | "grammars">("words");
   const [step, setStep] = useState<number | null>(null);
   const [translation, setTranslation] = useState<string>("");
-  const [saved, setSaved] = useState<ISelection[]>([]);
+  const [saved, setSaved] = useState<Array<IWord | IGrammar>>([]);
+  const [validationError, setValidationError] = useState<string>();
 
+  const handleText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(event.target.value);
+    setText(event.target.value);
+  };
   const handleSelect = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     // selectionStart and selectionEnd are available on textarea
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
@@ -47,13 +54,28 @@ const Editor: React.FC = () => {
     setStep(3);
   };
 
+  const handleSave = () => {
+    if (text.length > 10) {
+      const daily = {
+        text,
+        words: saved.filter(s => s.type === "words"),
+        grammars: saved.filter(s => s.type === "grammars")
+      };
+      return Api.post("/dailies", daily).then(response =>
+        console.log({ response })
+      );
+    } else {
+      return setValidationError("Please enter at least 10 characters");
+    }
+  };
+
   const clearModalSettings = () => {
     setSelection(null);
     setTranslation("");
     setStep(null);
   };
 
-  const saveSelection = (toSave: ISelection) => {
+  const saveSelection = (toSave: IWord | IGrammar) => {
     console.log(toSave);
     // take selection and translation and inputs
     const addToSaved = {
@@ -114,17 +136,19 @@ const Editor: React.FC = () => {
 
   const displayAsideRight = () => {
     return (
-      <ul>
-        {saved.map((s, i) => (
-          <StyledDotWithWordListItem key={`${i}_${s.name}`}>
-            <DotWithWord
-              typeOrColor={s.type}
-              word={s.name}
-              translation={s.translation}
-            ></DotWithWord>
-          </StyledDotWithWordListItem>
-        ))}
-      </ul>
+      <div>
+        <ul>
+          {saved.map((s, i) => (
+            <StyledDotWithWordListItem key={`${i}_${s.text}`}>
+              <DotWithWord
+                typeOrColor={s.type}
+                word={s.text}
+                translation={s.translation}
+              ></DotWithWord>
+            </StyledDotWithWordListItem>
+          ))}
+        </ul>
+      </div>
     );
   };
 
@@ -139,7 +163,12 @@ const Editor: React.FC = () => {
           onSelect={event =>
             handleSelect(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
+          onChange={event =>
+            handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
+          }
         ></TextArea>
+        {validationError && <span>{validationError}</span>}
+        <button onClick={handleSave}>Save</button>
       </Main>
       <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
       {displayModal()}
