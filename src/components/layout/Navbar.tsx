@@ -21,11 +21,11 @@ const Navbar: React.FC = () => (
         Words
       </StyledLink>
     </li>
-    <li>
+    {/* <li>
       <StyledLink exact to="/grammars">
         Grammars
       </StyledLink>
-    </li>
+    </li> */}
   </List>
 );
 export default Navbar;
