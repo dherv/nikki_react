@@ -13,7 +13,7 @@ import {
   AsideRight,
   AsideLeftDefault
 } from "../components/layout/Asides";
-import { ISelection, IGrammar, IWord } from "../types/interfaces";
+import { ISelection } from "../types/interfaces";
 
 import DotWithWord from "../components/ui/DotWithWord";
 import Api from "../api/Api";
@@ -24,7 +24,7 @@ const Editor: React.FC = () => {
   const [status, setModalStatus] = useState<"words" | "grammars">("words");
   const [step, setStep] = useState<number | null>(null);
   const [translation, setTranslation] = useState<string>("");
-  const [saved, setSaved] = useState<Array<IWord | IGrammar>>([]);
+  const [saved, setSaved] = useState<ISelection[]>([]);
   const [validationError, setValidationError] = useState<string>();
 
   const handleText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -75,7 +75,7 @@ const Editor: React.FC = () => {
     setStep(null);
   };
 
-  const saveSelection = (toSave: IWord | IGrammar) => {
+  const saveSelection = (toSave: ISelection) => {
     console.log(toSave);
     // take selection and translation and inputs
     const addToSaved = {

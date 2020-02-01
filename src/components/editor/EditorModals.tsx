@@ -78,9 +78,9 @@ export const EditorModalTranslation: FC<{
 
 export const EditorModalForm: FC<{
   onClick: ({
-    name,
+    text,
     translation,
-    sentence,
+    example,
     explanation,
     type
   }: ISelection) => void;
@@ -89,9 +89,9 @@ export const EditorModalForm: FC<{
   passedTranslation: string;
   passedSelection: string;
 }> = ({ onClick, status, passedSelection, passedTranslation, goBack }) => {
-  const [name, setName] = useState<string>(passedSelection);
+  const [text, setText] = useState<string>(passedSelection);
   const [translation, setTranslation] = useState<string>(passedTranslation);
-  const [sentence, setSentence] = useState<string>("");
+  const [example, setExample] = useState<string>("");
   const [explanation, setExplanation] = useState<string>("");
 
   let child = null;
@@ -101,12 +101,12 @@ export const EditorModalForm: FC<{
       child = (
         <StyledModalForm>
           <StyledFormInput
-            id="name"
-            name="name"
+            id="text"
+            name="text"
             type="text"
             placeholder="Word"
-            value={name}
-            onChange={({ target }) => setName(target.value)}
+            value={text}
+            onChange={({ target }) => setText(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             id="translation"
@@ -117,11 +117,11 @@ export const EditorModalForm: FC<{
             onChange={({ target }) => setTranslation(target.value)}
           ></StyledFormInput>
           <StyledFormInput
-            id="sentence"
-            name="sentence"
+            id="example"
+            name="example"
             type="text"
             placeholder="Example Sentence"
-            onChange={({ target }) => setSentence(target.value)}
+            onChange={({ target }) => setExample(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             as="textarea"
@@ -140,12 +140,12 @@ export const EditorModalForm: FC<{
       child = (
         <StyledModalForm>
           <StyledFormInput
-            id="name"
-            name="name"
+            id="text"
+            name="text"
             type="text"
             placeholder="Word"
-            value={name}
-            onChange={({ target }) => setName(target.value)}
+            value={text}
+            onChange={({ target }) => setText(target.value)}
           ></StyledFormInput>
           <StyledFormInput
             id="translation"
@@ -156,11 +156,11 @@ export const EditorModalForm: FC<{
             onChange={({ target }) => setTranslation(target.value)}
           ></StyledFormInput>
           <StyledFormInput
-            id="sentence"
-            name="sentence"
+            id="example"
+            name="example"
             type="text"
             placeholder="Example Sentence"
-            onChange={({ target }) => setSentence(target.value)}
+            onChange={({ target }) => setExample(target.value)}
           ></StyledFormInput>
         </StyledModalForm>
       );
@@ -177,7 +177,7 @@ export const EditorModalForm: FC<{
         <StyledModalButton onClick={() => goBack(2)}>back</StyledModalButton>
         <StyledModalButton
           onClick={() =>
-            onClick({ name, translation, sentence, explanation, type: status })
+            onClick({ text, translation, example, explanation, type: status })
           }
         >
           Save

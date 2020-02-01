@@ -1,7 +1,7 @@
 export interface ISelection {
-  name: string;
+  text: string;
   translation: string;
-  sentence: string;
+  example: string;
   explanation?: string;
   type: "words" | "grammars";
 }
@@ -21,7 +21,7 @@ export interface IGrammar {
   id: number;
   text: string;
   translation: string;
-  explanation: string;
+  explanation?: string;
   example: string;
   dailyId: number;
   createdAt: string;
