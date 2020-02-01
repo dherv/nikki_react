@@ -17,9 +17,8 @@ const Dailies = () => {
   const [dailies, setDailies] = useState<IDaily[]>([]);
 
   useEffect(() => {
-    Api.get("/dailies").then(data => {
-      const dailies: IDaily[] = data;
-      setDailies(dailies);
+    Api.get("/dailies").then((data: IDaily[]) => {
+      setDailies(data);
     });
   }, []);
 
