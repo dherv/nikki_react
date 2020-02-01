@@ -11,6 +11,7 @@ import {
   StyledAsideStatisticsSpan,
   StyledAsideListItemRecentDailies
 } from "./AsidesStyles";
+import Translate from "../translate/Translate";
 import {
   faBatteryHalf,
   faFont,
@@ -43,11 +44,11 @@ export const AsideLeft: FC<{ title: string }> = ({ children, title }) => {
   );
 };
 
-export const AsideLeftDefault: FC<{}> = () => (
+export const AsideLeftDefault: FC<{}> = ({ children }) => (
   <div>
     <StyledAsideDescriptionList>
       <StyledAsideDescriptionTitle>
-        Coming in next version
+        {children ? children : "Coming in next version"}
       </StyledAsideDescriptionTitle>
       {/* <StyledAsideDescriptionTitle>Weak Words</StyledAsideDescriptionTitle>
       <StyledAsideDescription>word1</StyledAsideDescription>

@@ -1,9 +1,8 @@
 export interface ISelection {
   text: string;
   translation: string;
-  example: string;
+  example?: string;
   explanation?: string;
-  type: "words" | "grammars";
 }
 
 export interface IWord {

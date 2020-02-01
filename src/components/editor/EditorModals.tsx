@@ -77,13 +77,7 @@ export const EditorModalTranslation: FC<{
 );
 
 export const EditorModalForm: FC<{
-  onClick: ({
-    text,
-    translation,
-    example,
-    explanation,
-    type
-  }: ISelection) => void;
+  onClick: ({ text, translation, example, explanation }: ISelection) => void;
   goBack: (stepNumber: number) => void;
   status: "words" | "grammars";
   passedTranslation: string;
@@ -176,9 +170,7 @@ export const EditorModalForm: FC<{
       <StyledModalButtonContainer>
         <StyledButton onClick={() => goBack(2)}>back</StyledButton>
         <StyledButton
-          onClick={() =>
-            onClick({ text, translation, example, explanation, type: status })
-          }
+          onClick={() => onClick({ text, translation, example, explanation })}
         >
           Save
         </StyledButton>

@@ -13,14 +13,15 @@ import {
   AsideRight,
   AsideLeftDefault
 } from "../components/layout/Asides";
-import { ISelection } from "../types/interfaces";
+import { ISelection, IWord } from "../types/interfaces";
 
 import DotWithWord from "../components/ui/DotWithWord";
 import Api from "../api/Api";
+import Translate from "../components/translate/Translate";
 
 const Editor: React.FC = () => {
   const [text, setText] = useState<string>("");
-  const [selection, setSelection] = useState<string | null>("");
+  const [selection, setSelection] = useState<string>("");
   const [status, setModalStatus] = useState<"words" | "grammars">("words");
   const [step, setStep] = useState<number | null>(null);
   const [translation, setTranslation] = useState<string>("");
@@ -43,8 +44,9 @@ const Editor: React.FC = () => {
       event.target.selectionStart,
       event.target.selectionEnd
     );
+
     setSelection(selection);
-    setStep(1);
+    // setStep(1);
   };
 
   const handleClick = (status: "words" | "grammars") => {
@@ -63,8 +65,8 @@ const Editor: React.FC = () => {
     if (text.length > 10) {
       const daily = {
         text,
-        words: saved.filter(s => s.type === "words"),
-        grammars: saved.filter(s => s.type === "grammars")
+        words: saved
+        // grammars: saved.filter(s => s.type === "grammars")
       };
       return Api.post("/dailies", daily).then(response =>
         console.log({ response })
@@ -75,7 +77,7 @@ const Editor: React.FC = () => {
   };
 
   const clearModalSettings = () => {
-    setSelection(null);
+    setSelection("");
     setTranslation("");
     setStep(null);
   };
@@ -94,6 +96,24 @@ const Editor: React.FC = () => {
     setTranslation("");
 
     clearModalSettings();
+  };
+
+  const addToTextAndSelection = (source: string, target: string) => {
+    console.log("addToTextAndSelection", source, target);
+    const toSave: ISelection = {
+      text: source,
+      translation: target
+    };
+    setSaved([...saved, toSave]);
+    setText(`${text} ${source}`);
+  };
+  const addToSelection = (source: string, target: string) => {
+    console.log("addTOSelection", source, target);
+    const toSave: ISelection = {
+      text: source,
+      translation: target
+    };
+    setSaved([...saved, toSave]);
   };
 
   const displayModal = () => {
@@ -146,7 +166,7 @@ const Editor: React.FC = () => {
           {saved.map((s, i) => (
             <StyledDotWithWordListItem key={`${i}_${s.text}`}>
               <DotWithWord
-                typeOrColor={s.type}
+                typeOrColor="words"
                 word={s.text}
                 translation={s.translation}
               ></DotWithWord>
@@ -157,11 +177,21 @@ const Editor: React.FC = () => {
     );
   };
 
-  const displayAsideLeft = () => <AsideLeftDefault />;
+  const displayAsideLeft = () => (
+    <AsideLeftDefault>
+      <Translate
+        addToTextAndSelection={(source, target) =>
+          addToTextAndSelection(source, target)
+        }
+        addToSelection={(source, target) => addToSelection(source, target)}
+        selection={selection}
+      ></Translate>
+    </AsideLeftDefault>
+  );
 
   return (
     <Layout>
-      <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft>
+      <AsideLeft title="translate">{displayAsideLeft()}</AsideLeft>
       <Main>
         <MainTitle>Editor</MainTitle>
         <TextArea
@@ -171,6 +201,7 @@ const Editor: React.FC = () => {
           onChange={event =>
             handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
+          value={text}
         ></TextArea>
 
         <StyledValidationErrorMessage visible={showValidationErrorMessage}>
