@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../components/layout/Layout";
-import { Main, MainTitle } from "../styled/GlobalComponents";
+import { Main, MainTitle, StyledButton } from "../styled/GlobalComponents";
 import styled from "styled-components";
 import ModalSelect from "../components/modal/ModalSelect";
 import {
@@ -25,11 +25,16 @@ const Editor: React.FC = () => {
   const [step, setStep] = useState<number | null>(null);
   const [translation, setTranslation] = useState<string>("");
   const [saved, setSaved] = useState<ISelection[]>([]);
-  const [validationError, setValidationError] = useState<string>();
+  const [showValidationErrorMessage, setShowValidationErrorMessage] = useState<
+    boolean
+  >(false);
 
   const handleText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     console.log(event.target.value);
     setText(event.target.value);
+    if (showValidationErrorMessage && event.target.value.length >= 10) {
+      setShowValidationErrorMessage(false);
+    }
   };
   const handleSelect = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     // selectionStart and selectionEnd are available on textarea
@@ -65,7 +70,7 @@ const Editor: React.FC = () => {
         console.log({ response })
       );
     } else {
-      return setValidationError("Please enter at least 10 characters");
+      return setShowValidationErrorMessage(true);
     }
   };
 
@@ -167,8 +172,12 @@ const Editor: React.FC = () => {
             handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
         ></TextArea>
-        {validationError && <span>{validationError}</span>}
-        <button onClick={handleSave}>Save</button>
+
+        <StyledValidationErrorMessage visible={showValidationErrorMessage}>
+          Please enter at least 10 characters
+        </StyledValidationErrorMessage>
+
+        <StyledButton onClick={handleSave}>Save</StyledButton>
       </Main>
       <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
       {displayModal()}
@@ -176,6 +185,11 @@ const Editor: React.FC = () => {
   );
 };
 
+const StyledValidationErrorMessage = styled.p<{ visible: boolean }>`
+  color: #dc3545;
+  opacity: ${props => (props.visible ? 1 : 0)};
+  margin: 2rem 0;
+`;
 const StyledDotWithWordListItem = styled.li`
   margin: 1rem 0;
 `;
@@ -192,6 +206,7 @@ const TextArea = styled.textarea`
   caret-color: rgba(118, 118, 118, 0.2);
   resize: none;
   outline: none;
+  line-height: 1.5;
 `;
 
 export default Editor;

@@ -6,16 +6,6 @@ export const StyledModalButtonContainer = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
-export const StyledModalButton = styled.button`
-  background-color: #26A69A
-  color: #fff;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: .5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer
-`;
 
 // Modal Type
 export const StyledModalTypeContainer = styled.div`

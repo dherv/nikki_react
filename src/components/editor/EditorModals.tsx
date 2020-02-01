@@ -8,13 +8,13 @@ import {
   StyledModalTranslationList,
   StyledModalTranslationListItem,
   StyledModalButtonContainer,
-  StyledModalButton,
   StyledModalForm,
   StyledFormInput,
   StyledModalFormTitleContainer,
   StyledModalFormTitle
 } from "./EditorModalsStyles";
 import { ISelection } from "../../types/interfaces";
+import { StyledButton } from "../../styled/GlobalComponents";
 
 export const EditorModalType: FC<{
   onClick: (status: "words" | "grammars") => void;
@@ -69,8 +69,8 @@ export const EditorModalTranslation: FC<{
         </StyledModalTranslationListItem>
       </StyledModalTranslationList>
       <StyledModalButtonContainer>
-        <StyledModalButton onClick={() => goBack(1)}>back</StyledModalButton>
-        <StyledModalButton onClick={() => onClick("")}>Skip</StyledModalButton>
+        <StyledButton onClick={() => goBack(1)}>back</StyledButton>
+        <StyledButton onClick={() => onClick("")}>Skip</StyledButton>
       </StyledModalButtonContainer>
     </StyledModalTranslationContainer>
   </>
@@ -174,14 +174,14 @@ export const EditorModalForm: FC<{
       </StyledModalFormTitleContainer>
       {child}
       <StyledModalButtonContainer>
-        <StyledModalButton onClick={() => goBack(2)}>back</StyledModalButton>
-        <StyledModalButton
+        <StyledButton onClick={() => goBack(2)}>back</StyledButton>
+        <StyledButton
           onClick={() =>
             onClick({ text, translation, example, explanation, type: status })
           }
         >
           Save
-        </StyledModalButton>
+        </StyledButton>
       </StyledModalButtonContainer>
     </>
   );
