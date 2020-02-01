@@ -46,7 +46,10 @@ export const AsideLeft: FC<{ title: string }> = ({ children, title }) => {
 export const AsideLeftDefault: FC<{}> = () => (
   <div>
     <StyledAsideDescriptionList>
-      <StyledAsideDescriptionTitle>Weak Words</StyledAsideDescriptionTitle>
+      <StyledAsideDescriptionTitle>
+        Coming in next version
+      </StyledAsideDescriptionTitle>
+      {/* <StyledAsideDescriptionTitle>Weak Words</StyledAsideDescriptionTitle>
       <StyledAsideDescription>word1</StyledAsideDescription>
       <StyledAsideDescription>word1</StyledAsideDescription>
       <StyledAsideDescription>word1</StyledAsideDescription>
@@ -63,9 +66,9 @@ export const AsideLeftDefault: FC<{}> = () => (
       </StyledAsideDescriptionTitle>
       <StyledAsideDescription>grammar1</StyledAsideDescription>
       <StyledAsideDescription>grammar1</StyledAsideDescription>
-      <StyledAsideDescription>grammar1</StyledAsideDescription>
+      <StyledAsideDescription>grammar1</StyledAsideDescription> */}
     </StyledAsideDescriptionList>
-    <StyledAsideStatistics>
+    {/* <StyledAsideStatistics>
       <StyledAsideStatisticsContainer>
         <StyledAsideStatisticsIcon icon={faBatteryHalf} />
         <StyledAsideStatisticsSpan>75%</StyledAsideStatisticsSpan>
@@ -78,7 +81,7 @@ export const AsideLeftDefault: FC<{}> = () => (
         <StyledAsideStatisticsIcon icon={faCheckCircle} />
         <StyledAsideStatisticsSpan>78 words</StyledAsideStatisticsSpan>
       </StyledAsideStatisticsContainer>
-    </StyledAsideStatistics>
+    </StyledAsideStatistics>*/}
   </div>
 );
 
