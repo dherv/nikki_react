@@ -180,7 +180,7 @@ const Editor: React.FC = () => {
         <StyledButton onClick={handleSave}>Save</StyledButton>
       </Main>
       <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
-      {displayModal()}
+      {/* {displayModal()} */}
     </Layout>
   );
 };
