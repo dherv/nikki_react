@@ -33,7 +33,7 @@ export interface IDaily {
   id: number;
   userId: number;
   languageId: number;
-  body: string;
+  text: string;
   createdAt: string;
   updatedAt: string;
   words: IWord[];

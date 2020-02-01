@@ -39,7 +39,7 @@ const Dailies = () => {
 
   const displayListItemPanel = (itemDetails: IDaily) => (
     <>
-      <p>{itemDetails.body}</p>
+      <p>{itemDetails.text}</p>
       <StyledPanelList>
         {[...itemDetails.words, ...itemDetails.grammars].map((w, i) => (
           <StyledPanelListItem key={`${i}_${w.text}`}>
