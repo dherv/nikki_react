@@ -7,18 +7,14 @@ import {
   AsideRecentDailies
 } from "../components/layout/Asides";
 import { Main, MainTitle } from "../styled/GlobalComponents";
-import { IWord, IDaily } from "../types/interfaces";
+import { IWord } from "../types/interfaces";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
 import DotWithWord from "../components/ui/DotWithWord";
-import {
-  StyledAsideListItem,
-  StyledAsideListItemRecentDailies
-} from "../components/layout/AsidesStyles";
 
 const Words = () => {
   const sampleWords: Array<IWord> = [
     {
-      name: "word1",
+      text: "word1",
       translation: "word1",
       type: "words",
       createdAt: "2020/01/01",
@@ -26,7 +22,7 @@ const Words = () => {
       timesUsed: 3
     },
     {
-      name: "word2",
+      text: "word2",
       translation: "word2",
       type: "words",
       createdAt: "2020/01/01",
@@ -34,47 +30,10 @@ const Words = () => {
       timesUsed: 3
     }
   ];
-  const recentDailies: ReadonlyArray<IDaily> = [
-    {
-      name: "daily1",
-      createdAt: "2020/01/01",
-      text: "Daily 1 example sentence on click",
-      words: sampleWords
-    },
-    {
-      name: "daily2",
-      createdAt: "2020/01/01",
-      text: "Daily 2 example sentence on click",
-      words: sampleWords
-    }
-  ];
+
   const displayAsideLeft = () => <AsideLeftDefault />;
-  const displayAsideRight = () => (
-    <AsideRecentDailies
-      content={
-        <ul>
-          {recentDailies.map(d => (
-            <StyledAsideListItemRecentDailies>
-              <h4>{d.createdAt}</h4>
-              <h5>{d.name}</h5>
-              <p>{d.text}</p>
-              <ul>
-                {d.words.map(w => (
-                  <StyledAsideListItem>
-                    <DotWithWord
-                      typeOrColor={w.type}
-                      word={w.name}
-                      translation={w.translation}
-                    />
-                  </StyledAsideListItem>
-                ))}
-              </ul>
-            </StyledAsideListItemRecentDailies>
-          ))}
-        </ul>
-      }
-    />
-  );
+  const displayAsideRight = () => <AsideRecentDailies />;
+
   const displayListItemPanel = (itemDetails: IWord) => {
     return (
       <>
@@ -94,14 +53,14 @@ const Words = () => {
         <ul>
           {sampleWords.map((w, i) => (
             <MainListItemWithPanel
-              key={`${i}_${w.name}`}
+              key={`${i}_${w.text}`}
               itemIndex={i}
               additionalText={w.translation}
               itemDetails={w}
               listItemContent={
                 <DotWithWord
                   typeOrColor={w.type}
-                  word={w.name}
+                  word={w.text}
                   translation={w.translation}
                 />
               }

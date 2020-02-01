@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { StyledAside } from "../../styled/GlobalComponents";
 import styled from "styled-components";
 import {
@@ -8,13 +8,17 @@ import {
   StyledAsideStatistics,
   StyledAsideStatisticsContainer,
   StyledAsideStatisticsIcon,
-  StyledAsideStatisticsSpan
+  StyledAsideStatisticsSpan,
+  StyledAsideListItemRecentDailies
 } from "./AsidesStyles";
 import {
   faBatteryHalf,
   faFont,
   faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
+import { IDaily } from "../../types/interfaces";
+import Api from "../../api/Api";
+import Utils from "../../utils/Utils";
 
 export const AsideRight: FC<{ title: string; subtitle?: string }> = ({
   children,
@@ -78,9 +82,29 @@ export const AsideLeftDefault: FC<{}> = () => (
   </div>
 );
 
-export const AsideRecentDailies: FC<{ content: React.ReactElement }> = ({
-  content
-}) => <StyledAsideContent>{content}</StyledAsideContent>;
+export const AsideRecentDailies: FC<{}> = () => {
+  const [recentDailies, setRecentDailies] = useState<IDaily[]>([]);
+  useEffect(() => {
+    Api.get("/dailies").then(data => {
+      const dailies: IDaily[] = data;
+      setRecentDailies(dailies);
+    });
+  }, []);
+  return (
+    <StyledAsideContent>
+      <ul>
+        {recentDailies.length > 0 &&
+          recentDailies.map(d => (
+            <StyledAsideListItemRecentDailies>
+              <h4>{Utils.DateFormat(d.createdAt)}</h4>
+              <h5>{d.title}</h5>
+              <p>{Utils.TextTruncate(d.body)}</p>
+            </StyledAsideListItemRecentDailies>
+          ))}
+      </ul>
+    </StyledAsideContent>
+  );
+};
 
 const StyledAsideTitle = styled.h5`
   font-size: 1.25rem;

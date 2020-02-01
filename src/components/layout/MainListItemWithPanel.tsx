@@ -9,7 +9,7 @@ import { IWord, IDaily } from "../../types/interfaces";
 
 const MainListItemWithPanel: FC<{
   additionalText: string;
-  itemDetails: IWord | IDaily;
+  itemDetails: IWord | IDaily | any;
   itemIndex: number;
   listItemContent?: React.ReactElement;
   listItemPanelContent: React.ReactElement;
@@ -35,7 +35,9 @@ const MainListItemWithPanel: FC<{
             listItemContent
           ) : (
             <>
-              <StyledName>{itemDetails.name}</StyledName>
+              <StyledName>
+                {itemDetails.title ? itemDetails.title : itemDetails.name}
+              </StyledName>
               <StyledAdditionalText>{additionalText}</StyledAdditionalText>
             </>
           )}
