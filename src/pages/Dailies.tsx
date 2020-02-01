@@ -18,7 +18,19 @@ const Dailies = () => {
 
   useEffect(() => {
     Api.get("/dailies").then((data: IDaily[]) => {
-      setDailies(data);
+      const dailies = data.map(d => {
+        const { words, grammars } = d;
+        d.words = words.map(w => {
+          w.type = "words";
+          return w;
+        });
+        d.grammars = grammars.map(g => {
+          g.type = "grammars";
+          return g;
+        });
+        return d;
+      });
+      setDailies(dailies);
     });
   }, []);
 
@@ -29,10 +41,10 @@ const Dailies = () => {
     <>
       <p>{itemDetails.body}</p>
       <StyledPanelList>
-        {itemDetails.words.map((w, i) => (
+        {[...itemDetails.words, ...itemDetails.grammars].map((w, i) => (
           <StyledPanelListItem key={`${i}_${w.text}`}>
             <DotWithWord
-              typeOrColor="words"
+              typeOrColor={w.type}
               word={w.text}
               translation={w.translation}
             />

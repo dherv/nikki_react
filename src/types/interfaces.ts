@@ -14,6 +14,7 @@ export interface IWord {
   timesUsed?: number;
   createdAt: string;
   updatedAt: string;
+  type: "words" | "grammars";
 }
 
 export interface IGrammar {
@@ -25,6 +26,7 @@ export interface IGrammar {
   dailyId: number;
   createdAt: string;
   updatedAt: string;
+  type: "words" | "grammars";
 }
 
 export interface IDaily {
@@ -36,4 +38,5 @@ export interface IDaily {
   createdAt: string;
   updatedAt: string;
   words: IWord[];
+  grammars: IGrammar[];
 }
