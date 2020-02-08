@@ -1,5 +1,7 @@
 import React, { useState, FC, useEffect } from "react";
 import Api from "../../api/Api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 
 const Translate: FC<{
   addToTextAndSelection: (source: string, target: string) => void;
@@ -34,6 +36,18 @@ const Translate: FC<{
     );
   };
 
+  const handlePlaySound = () => {
+    if (targetLanguage) {
+      Api.post("/speech", { text: targetLanguage }).then(res => {
+        const audio = new Audio(`${res.Location}?v=${Date.now()}`);
+        if (audio) {
+          audio.load();
+          audio.play();
+        }
+      });
+    }
+  };
+
   return (
     <form>
       <label>English</label>
@@ -44,12 +58,19 @@ const Translate: FC<{
         onChange={({ target }) => setSourceLanguage(target.value)}
       ></textarea>
       <label>Norwegian</label>
-      <textarea
-        name="target"
-        value={targetLanguage}
-        disabled={!!sourceLanguage}
-        onChange={({ target }) => setTargetLanguage(target.value)}
-      ></textarea>
+      <div>
+        <textarea
+          name="target"
+          value={targetLanguage}
+          disabled={!!sourceLanguage}
+          onChange={({ target }) => setTargetLanguage(target.value)}
+        ></textarea>
+        <FontAwesomeIcon
+          icon={faVolumeUp}
+          onClick={handlePlaySound}
+        ></FontAwesomeIcon>
+      </div>
+
       {!translationInProgress ? (
         <button type="button" onClick={event => handleTranslate(event)}>
           translate
