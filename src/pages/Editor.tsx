@@ -62,8 +62,8 @@ const Editor: React.FC = () => {
 
   const addToSelection = (source: string, target: string) => {
     const toSave: ISelection = {
-      text: source,
-      translation: target
+      text: target,
+      translation: source
     };
     setSaved([...saved, toSave]);
   };
