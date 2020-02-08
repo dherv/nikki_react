@@ -4,19 +4,8 @@ import styled from "styled-components";
 import {
   StyledAsideDescriptionList,
   StyledAsideDescriptionTitle,
-  StyledAsideDescription,
-  StyledAsideStatistics,
-  StyledAsideStatisticsContainer,
-  StyledAsideStatisticsIcon,
-  StyledAsideStatisticsSpan,
   StyledAsideListItemRecentDailies
 } from "./AsidesStyles";
-import Translate from "../translate/Translate";
-import {
-  faBatteryHalf,
-  faFont,
-  faCheckCircle
-} from "@fortawesome/free-solid-svg-icons";
 import { IDaily } from "../../types/interfaces";
 import Api from "../../api/Api";
 import Utils from "../../utils/Utils";
