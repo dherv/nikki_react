@@ -4,6 +4,9 @@ import { NavLink } from "react-router-dom";
 const Navbar: React.FC = () => (
   <List>
     <li>
+      <Title>Nikki 日記</Title>
+    </li>
+    <li>
       <StyledLink exact to="/">
         Dailies
       </StyledLink>
@@ -13,9 +16,7 @@ const Navbar: React.FC = () => (
         Editor
       </StyledLink>
     </li>
-    <li>
-      <Title>Nikki 日記</Title>
-    </li>
+
     <li>
       <StyledLink exact to="/words">
         Words
@@ -33,13 +34,14 @@ export default Navbar;
 const List = styled.ul`
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  // justify-content: space-around;
   padding: 1rem;
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
 `;
 
 const StyledLink = styled(NavLink)`
   color: var(--font-color-main);
+  padding: 0 2rem;
   &.active {
     color: var(--font-color-dark);
   }
@@ -47,4 +49,5 @@ const StyledLink = styled(NavLink)`
 
 const Title = styled.h1`
   color: var(--font-color-dark);
+  padding: 0 2rem 0 1rem;
 `;

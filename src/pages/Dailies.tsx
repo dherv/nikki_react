@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/Layout";
 import styled from "styled-components";
-import {
-  AsideLeft,
-  AsideRight,
-  AsideLeftDefault
-} from "../components/layout/Asides";
+import { AsideRight } from "../components/layout/Asides";
 import { Main, MainTitle } from "../styled/GlobalComponents";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
 import { IDaily } from "../types/interfaces";
@@ -34,7 +30,7 @@ const Dailies = () => {
     });
   }, []);
 
-  const displayAsideLeft = () => <AsideLeftDefault />;
+  // const displayAsideLeft = () => <AsideLeftDefault />;
   const displayAsideRight = () => null;
 
   const displayListItemPanel = (itemDetails: IDaily) => (
@@ -56,7 +52,7 @@ const Dailies = () => {
 
   return (
     <Layout>
-      <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft>
+      {/* <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft> */}
       <Main>
         <MainTitle>Dailies</MainTitle>
         <ul>

@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/Layout";
-import {
-  AsideLeft,
-  AsideRight,
-  AsideLeftDefault,
-  AsideRecentDailies
-} from "../components/layout/Asides";
+import { AsideRight, AsideRecentDailies } from "../components/layout/Asides";
 import { Main, MainTitle } from "../styled/GlobalComponents";
 import { IWord } from "../types/interfaces";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
@@ -22,7 +17,7 @@ const Words = () => {
     });
   }, []);
 
-  const displayAsideLeft = () => <AsideLeftDefault />;
+  // const displayAsideLeft = () => <AsideLeftDefault />;
   const displayAsideRight = () => <AsideRecentDailies />;
   const displayListItemPanel = (itemDetails: IWord) => {
     return (
@@ -38,7 +33,7 @@ const Words = () => {
 
   return (
     <Layout>
-      <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft>
+      {/* <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft> */}
       <Main>
         <MainTitle>Words</MainTitle>
         <ul>
