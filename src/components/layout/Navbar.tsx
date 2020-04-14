@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import Logo from "./Logo";
+
 const Navbar: React.FC = () => (
   <List>
-    <li>
-      <Title>Nikki 日記</Title>
+    <li style={{ display: "flex", alignItems: "center" }}>
+      <Logo />
+      <Title>Nikki</Title>
     </li>
     <li>
       <StyledLink exact to="/">
@@ -48,6 +51,7 @@ const StyledLink = styled(NavLink)`
 `;
 
 const Title = styled.h1`
-  color: var(--font-color-dark);
+  font-family: "Caveat Brush", cursive;
+  color: #26a69a;
   padding: 0 2rem 0 1rem;
 `;
