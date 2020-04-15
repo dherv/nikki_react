@@ -2,8 +2,8 @@ import React, { FC } from "react";
 
 const Logo: FC<{}> = () => (
   <svg
-    width="32"
-    height="32"
+    width="28"
+    height="28"
     version="1.1"
     viewBox="0 0 58.267 80.33"
     xmlns="http://www.w3.org/2000/svg"
