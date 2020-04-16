@@ -54,11 +54,11 @@ const useStyles = makeStyles((theme: Theme) =>
       width: drawerWidth,
       flexShrink: 0,
       whiteSpace: "nowrap",
-      backgroundColor: "#102027"
+      backgroundColor: "#fff"
     },
     drawerOpen: {
       width: drawerWidth,
-      backgroundColor: "#102027",
+      backgroundColor: "#fff",
       color: "#ecec",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
       })
     },
     drawerClose: {
-      backgroundColor: "#102027",
+      backgroundColor: "#fff",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
@@ -80,10 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-start",
+      justifyContent: "flex-start"
       // padding: theme.spacing(0, 1)
       // necessary for content to be below app bar
-      ...theme.mixins.toolbar
     },
     footer: {
       color: "#ecec",
@@ -142,10 +141,14 @@ const NavMenu: FC<{
               style={{
                 height: 20,
                 width: 20,
-                color: "rgba(255, 255, 255, 0.7)"
+                color: "#484848"
               }}
             >
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {index % 2 === 0 ? (
+                <InboxIcon fontSize="small" />
+              ) : (
+                <MailIcon fontSize="small" />
+              )}
             </ListItemIcon>
             <NavMenuText primary={text} />
           </NavListItem>
@@ -155,9 +158,9 @@ const NavMenu: FC<{
       <div className={classes.footer}>
         <IconButton onClick={closeDrawer}>
           {theme.direction === "rtl" ? (
-            <ChevronRightIcon style={{ color: "#ecec" }} />
+            <ChevronRightIcon style={{ color: "#484848" }} />
           ) : (
-            <ChevronLeftIcon style={{ color: "#ecec" }} />
+            <ChevronLeftIcon style={{ color: "#484848" }} />
           )}
         </IconButton>
       </div>
@@ -189,7 +192,7 @@ const NavListItem = styled.div`
 const NavMenuText = styled(ListItemText)`
   align-items: center;
   span {
-    color: rgba(255, 255, 255, 0.7);
+    color: #484848;
     display: flex;
     text-decoration: none;
     transition: background-color 0.15s ease;

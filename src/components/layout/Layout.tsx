@@ -29,23 +29,28 @@ const Layout: React.FC<{}> = ({ children }) => {
     <Container>
       <NavMenu closeDrawer={closeDrawer()} open={drawerState}></NavMenu>
       <Navbar openDrawer={openDrawer()}></Navbar>
-      <Main style={{ gridArea: "main" }}>{children}</Main>
+      <Main style={{ gridArea: "main" }}>
+        <MainContainer>{children}</MainContainer>
+      </Main>
     </Container>
   );
 };
-
 const Container = styled.div`
   display: grid;
   grid-template-areas:
     "nav navbar"
     "nav main";
   grid-template-columns: min-content 1fr;
-  grid-template-rows: min-content min-content 1fr;
+  grid-template-rows: min-content 1fr;
   min-height: 100vh;
+  overflow: hidden;
 `;
 const Main = styled.main`
-  display: flex;
-  justify-content: space-between;
   margin-top: 4rem;
 `;
+const MainContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 export default Layout;

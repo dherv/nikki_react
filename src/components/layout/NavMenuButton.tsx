@@ -14,6 +14,9 @@ const NavMenuButton: FC<{
   return (
     <>
       <IconButton
+        disableFocusRipple
+        disableRipple
+        size="small"
         color="inherit"
         aria-label="open drawer"
         edge="start"

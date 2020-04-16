@@ -11,6 +11,14 @@ import { ISelection } from "../types/interfaces";
 import DotWithWord from "../components/ui/DotWithWord";
 import Api from "../api/Api";
 import Translate from "../components/translate/Translate";
+import {
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+  Button
+} from "@material-ui/core";
+import classes from "*.module.css";
 
 const Editor: React.FC = () => {
   const [text, setText] = useState<string>("");
@@ -100,10 +108,9 @@ const Editor: React.FC = () => {
 
   return (
     <Layout>
-      <AsideLeft title="translate">{displayAsideLeft()}</AsideLeft>
-      <Main>
-        <MainTitle>Editor</MainTitle>
-        <TextArea
+      <EditorContainer>
+        <Input
+          style={{ height: "100%" }}
           onSelect={event =>
             handleSelect(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
@@ -111,18 +118,22 @@ const Editor: React.FC = () => {
             handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
           value={text}
-        ></TextArea>
-
+          placeholder="type your text here"
+        ></Input>
         <StyledValidationErrorMessage visible={showValidationErrorMessage}>
           Please enter at least 10 characters
         </StyledValidationErrorMessage>
-
-        <StyledButton onClick={handleSave}>Save</StyledButton>
-      </Main>
+        {/* <StyledButton onClick={handleSave}>Save</StyledButton> */}
+      </EditorContainer>
       <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
     </Layout>
   );
 };
+
+const EditorContainer = styled.div`
+  min-width: 50%;
+  margin-left: 32px;
+`;
 
 const StyledValidationErrorMessage = styled.p<{ visible: boolean }>`
   color: #dc3545;
@@ -133,15 +144,16 @@ const StyledDotWithWordListItem = styled.li`
   margin: 1rem 0;
 `;
 
-const TextArea = styled.textarea`
+const Input = styled.textarea`
   width: 100%;
-  min-height: 30vmax;
+  // min-height: 30vmax;
   padding: 2rem;
   font-family: var(--font-text);
   color: var(--font-color-dark);
-  border-radius: 8px;
-  border: 1px solid rgba(118, 118, 118, 0.2);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  // border-radius: 8px;
+  // border: 1px solid rgba(118, 118, 118, 0.2);
+  // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border: none;
   caret-color: rgba(118, 118, 118, 0.2);
   resize: none;
   outline: none;

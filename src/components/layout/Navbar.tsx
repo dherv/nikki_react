@@ -23,6 +23,9 @@ const Navbar: React.FC<{
 const Container = styled.div`
   grid-area: navbar;
   position: sticky;
+  box-shadow: 0px 1px 2px 0px rgba(60, 64, 67, 0.3),
+    0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+  height: 48px;
   top: 0;
   z-index: 50;
 `;
