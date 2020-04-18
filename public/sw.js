@@ -3,7 +3,6 @@ const dynamicCache = "dynamic-cache-v1";
 const assets = [
   "/",
   "/index.html",
-
   "/fallback",
   "/static/js/bundle.js",
   "/static/js/1.chunk.js",
@@ -61,6 +60,7 @@ self.addEventListener("activate", (event) => {
 
 // fetch event
 self.addEventListener("fetch", (event) => {
+  if (!(event.request.url.indexOf("http") === 0)) return;
   // prevent cache anything coming from firestore
   if (event.request.url.indexOf("firestore.googleapis.com") === -1) {
     event.respondWith(
