@@ -7,6 +7,8 @@ import Editor from "./pages/Editor";
 import Dailies from "./pages/Dailies";
 import Words from "./pages/Words";
 import Grammars from "./pages/Grammars";
+import Fallback from "./pages/Fallback";
+import dbFactory from "./db/db";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +29,9 @@ const App: React.FC = () => {
         </Route>
         <Route exact path="/grammars">
           <Grammars />
+        </Route>
+        <Route exact path="/fallback">
+          <Fallback />
         </Route>
       </Switch>
     </Router>
