@@ -8,7 +8,6 @@ import Dailies from "./pages/Dailies";
 import Words from "./pages/Words";
 import Grammars from "./pages/Grammars";
 import Fallback from "./pages/Fallback";
-import dbFactory from "./db/db";
 
 const App: React.FC = () => {
   return (

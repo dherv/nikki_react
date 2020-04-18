@@ -1,24 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Layout from "../components/layout/Layout";
-import { Main, MainTitle, StyledButton } from "../styled/GlobalComponents";
 import styled from "styled-components";
-import {
-  AsideLeft,
-  AsideRight,
-  AsideLeftDefault
-} from "../components/layout/Asides";
+import { AsideRight, AsideLeftDefault } from "../components/layout/Asides";
 import { ISelection } from "../types/interfaces";
 import DotWithWord from "../components/ui/DotWithWord";
 import Api from "../api/Api";
 import Translate from "../components/translate/Translate";
-import {
-  Card,
-  CardContent,
-  Typography,
-  CardActions,
-  Button
-} from "@material-ui/core";
-import classes from "*.module.css";
+import FirebaseContext from "../contexts/FirebaseContext";
 
 const Editor: React.FC = () => {
   const [text, setText] = useState<string>("");
@@ -27,8 +15,12 @@ const Editor: React.FC = () => {
   const [showValidationErrorMessage, setShowValidationErrorMessage] = useState<
     boolean
   >(false);
+  const [currentItemId, setCurrentItemId] = useState<string>("");
+  const textUntouched = useRef(true);
+  const db = useContext(FirebaseContext);
 
   const handleText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    textUntouched.current = false;
     setText(event.target.value);
     if (showValidationErrorMessage && event.target.value.length >= 10) {
       setShowValidationErrorMessage(false);
@@ -49,9 +41,9 @@ const Editor: React.FC = () => {
     if (text.length > 10) {
       const daily = {
         text,
-        words: saved
+        words: saved,
       };
-      return Api.post("/dailies", daily).then(response =>
+      return Api.post("/dailies", daily).then((response) =>
         console.log({ response })
       );
     } else {
@@ -62,7 +54,7 @@ const Editor: React.FC = () => {
   const addToTextAndSelection = (source: string, target: string) => {
     const toSave: ISelection = {
       text: source,
-      translation: target
+      translation: target,
     };
     setSaved([...saved, toSave]);
     setText(`${text} ${source}`);
@@ -71,7 +63,7 @@ const Editor: React.FC = () => {
   const addToSelection = (source: string, target: string) => {
     const toSave: ISelection = {
       text: target,
-      translation: source
+      translation: source,
     };
     setSaved([...saved, toSave]);
   };
@@ -106,25 +98,56 @@ const Editor: React.FC = () => {
     </AsideLeftDefault>
   );
 
+  const callbackAdd = (id: string) => {
+    // set current id
+    setCurrentItemId(id);
+  };
+
+  const callbackUpdate = (document: any) => {
+    // update text and current id
+    const data = document.data();
+    console.log(data);
+    setCurrentItemId(document.id);
+    setText(data.text);
+  };
+
+  const checkDocumentOrCreate = () => {
+    // create doc if date does not exist yet
+    db.checkDocumentOrCreate(text, callbackAdd, callbackUpdate);
+  };
+
+  useEffect(() => {
+    if (db) {
+      checkDocumentOrCreate();
+    }
+  }, [db]);
+
+  useEffect(() => {
+    console.log(textUntouched.current);
+    if (text.length > 0 && !textUntouched.current) {
+      db.updateItem(text, currentItemId);
+    }
+  }, [text]);
   return (
     <Layout>
       <EditorContainer>
-        <Input
+        <TextArea
           style={{ height: "100%" }}
-          onSelect={event =>
+          onSelect={(event) =>
             handleSelect(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
-          onChange={event =>
+          onChange={(event) =>
             handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
           }
           value={text}
           placeholder="type your text here"
-        ></Input>
+        ></TextArea>
         <StyledValidationErrorMessage visible={showValidationErrorMessage}>
           Please enter at least 10 characters
         </StyledValidationErrorMessage>
         {/* <StyledButton onClick={handleSave}>Save</StyledButton> */}
       </EditorContainer>
+      <h1>hello</h1>
       <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
     </Layout>
   );
@@ -137,14 +160,14 @@ const EditorContainer = styled.div`
 
 const StyledValidationErrorMessage = styled.p<{ visible: boolean }>`
   color: #dc3545;
-  opacity: ${props => (props.visible ? 1 : 0)};
+  opacity: ${(props) => (props.visible ? 1 : 0)};
   margin: 2rem 0;
 `;
 const StyledDotWithWordListItem = styled.li`
   margin: 1rem 0;
 `;
 
-const Input = styled.textarea`
+const TextArea = styled.textarea`
   width: 100%;
   // min-height: 30vmax;
   padding: 2rem;
