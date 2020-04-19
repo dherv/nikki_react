@@ -1,6 +1,11 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { Normalize } from "styled-normalize";
 import { GlobalStyle } from "./styled/GlobalStyle";
 import Editor from "./pages/Editor";
@@ -18,6 +23,9 @@ const App: React.FC = () => {
             renders the first one that matches the current URL. */}
       <Switch>
         <Route exact path="/">
+          <Redirect to="/dailies" />
+        </Route>
+        <Route exact path="/dailies">
           <Dailies />
         </Route>
         <Route exact path="/editor">
@@ -25,9 +33,6 @@ const App: React.FC = () => {
         </Route>
         <Route exact path="/words">
           <Words />
-        </Route>
-        <Route exact path="/grammars">
-          <Grammars />
         </Route>
         <Route exact path="/fallback">
           <Fallback />

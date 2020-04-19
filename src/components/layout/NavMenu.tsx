@@ -4,7 +4,7 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  useTheme
+  useTheme,
 } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -18,43 +18,44 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { IconButton } from "@material-ui/core";
 import Logo from "./Logo";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: "flex"
+      display: "flex",
     },
     list: {
-      width: 256
+      width: 256,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      })
+        duration: theme.transitions.duration.leavingScreen,
+      }),
     },
     appBarShift: {
       marginLeft: drawerWidth,
       width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-      })
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     menuButton: {
-      marginRight: 36
+      marginRight: 36,
     },
     hide: {
-      display: "none"
+      display: "none",
     },
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
       whiteSpace: "nowrap",
-      backgroundColor: "#fff"
+      backgroundColor: "#fff",
     },
     drawerOpen: {
       width: drawerWidth,
@@ -62,25 +63,25 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "#ecec",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-      })
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     drawerClose: {
       backgroundColor: "#fff",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
+        duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: "hidden",
       width: theme.spacing(7) + 1,
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9) + 1
-      }
+        width: theme.spacing(9) + 1,
+      },
     },
     toolbar: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-start"
+      justifyContent: "flex-start",
       // padding: theme.spacing(0, 1)
       // necessary for content to be below app bar
     },
@@ -89,13 +90,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-end",
-      padding: theme.spacing(0, 1)
+      padding: theme.spacing(0, 1),
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
-      color: "#ecec"
-    }
+      color: "#ecec",
+    },
   })
 );
 
@@ -118,13 +119,13 @@ const NavMenu: FC<{
       variant="permanent"
       className={clsx(classes.drawer, {
         [classes.drawerOpen]: open,
-        [classes.drawerClose]: !open
+        [classes.drawerClose]: !open,
       })}
       classes={{
         paper: clsx({
           [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open
-        })
+          [classes.drawerClose]: !open,
+        }),
       }}
     >
       <div className={classes.toolbar}>
@@ -136,12 +137,12 @@ const NavMenu: FC<{
       <Divider />
       <List>
         {["Editor", "Dailies", "Words"].map((text, index) => (
-          <NavListItem key={text}>
+          <NavListItem to={`/${text.toLowerCase()}`} key={text}>
             <ListItemIcon
               style={{
                 height: 20,
                 width: 20,
-                color: "#484848"
+                color: "#484848",
               }}
             >
               {index % 2 === 0 ? (
@@ -181,7 +182,7 @@ const Title = styled.h1`
   font-size: 1.5rem;
   height: 18px;
 `;
-const NavListItem = styled.div`
+const NavListItem = styled(Link)`
   display: flex;
   align-items: center;
   height: 56px;
