@@ -14,30 +14,30 @@ const Logo: FC<{}> = () => (
         transform="matrix(.013233 .8414 .90866 -.0065115 -278.79 53)"
         d="m171.8 182.83-66.775 39.3-67.422-38.179-0.64726-77.479 66.775-39.3 67.422 38.179z"
         fill="#fff"
-        fill-rule="evenodd"
+        fillRule="evenodd"
         stroke="#000"
-        stroke-width="2.865"
+        strokeWidth="2.865"
       />
       <path
         d="m38.764 39.317"
         fill="none"
         stroke="#000"
-        stroke-width=".26458px"
+        strokeWidth=".26458px"
       />
       <g
         transform="matrix(.50244 0 0 .82635 -282.05 -31.076)"
         stroke="#000"
-        stroke-width=".26458px"
+        strokeWidth=".26458px"
       >
         <path d="m104.94 65.344c29.626-27.411 91.925-2.7688 91.925-2.7688-0.24843-14.816-48.875-21.564-88.879-17.444z" />
         <path d="m288.79 65.344c-29.626-27.411-91.925-2.7688-91.925-2.7688 0.24843-14.816 48.875-21.564 88.879-17.444z" />
       </g>
       <g fill="#fff">
         <g transform="translate(0 2.6458)">
-          <g fill="#26A69A">
+          <g fill="#347B9C">
             <circle cx="135.06" cy="95.133" r="0" stroke="#fff" />
             <g transform="matrix(.92994 0 0 .92994 4.578 -40.043)">
-              <g stroke-width="0">
+              <g strokeWidth="0">
                 <rect
                   transform="rotate(25)"
                   x="129.24"
@@ -57,8 +57,8 @@ const Logo: FC<{}> = () => (
               </g>
               <g
                 transform="translate(4.2514e-8 9.0381)"
-                fill="#26A69A"
-                stroke-width="0"
+                fill="#347B9C"
+                strokeWidth="0"
               >
                 <rect
                   transform="rotate(25)"
@@ -78,7 +78,7 @@ const Logo: FC<{}> = () => (
                 />
               </g>
             </g>
-            <g transform="translate(0 -2.1167)" stroke-width="0">
+            <g transform="translate(0 -2.1167)" strokeWidth="0">
               <path d="m98.947 53.386 20.902 46.631c-5.7302-3.8674-12.427-4.6212-20.792 3e-3z" />
               <path d="m71.959 99.849c8.1034-3.9608 15.433-3.2778 22.366-0.21655v-54.664z" />
             </g>
