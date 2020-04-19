@@ -5,8 +5,9 @@ import { AsideRight, AsideLeftDefault } from "../components/layout/Asides";
 import { ISelection } from "../types/interfaces";
 import DotWithWord from "../components/ui/DotWithWord";
 import Api from "../api/Api";
-import Translate from "../components/translate/Translate";
+import Translate from "../components/translater/Translater";
 import FirebaseContext from "../contexts/FirebaseContext";
+import Translater from "../components/translater/Translater";
 
 const Editor: React.FC = () => {
   const [text, setText] = useState<string>("");
@@ -86,17 +87,7 @@ const Editor: React.FC = () => {
     );
   };
 
-  const displayAsideLeft = () => (
-    <AsideLeftDefault>
-      <Translate
-        addToTextAndSelection={(source, target) =>
-          addToTextAndSelection(source, target)
-        }
-        addToSelection={(source, target) => addToSelection(source, target)}
-        selection={selection}
-      ></Translate>
-    </AsideLeftDefault>
-  );
+  const displayAsideLeft = () => <AsideLeftDefault></AsideLeftDefault>;
 
   const callbackAdd = (id: string) => {
     // set current id
@@ -140,17 +131,27 @@ const Editor: React.FC = () => {
           value={text}
           placeholder="type your text here"
         ></TextArea>
-        <StyledValidationErrorMessage visible={showValidationErrorMessage}>
+        <Translater
+          addToTextAndSelection={(source, target) =>
+            addToTextAndSelection(source, target)
+          }
+          addToSelection={(source, target) => addToSelection(source, target)}
+          selection={selection}
+        ></Translater>
+        {/* <StyledValidationErrorMessage visible={showValidationErrorMessage}>
           Please enter at least 10 characters
-        </StyledValidationErrorMessage>
+        </StyledValidationErrorMessage> */}
         {/* <StyledButton onClick={handleSave}>Save</StyledButton> */}
       </EditorContainer>
-      <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
+      {/* <AsideRight title="current selection">{displayAsideRight()}</AsideRight> */}
     </Layout>
   );
 };
 
 const EditorContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
   min-width: 50%;
   margin-left: 32px;
 `;
@@ -165,7 +166,7 @@ const StyledDotWithWordListItem = styled.li`
 `;
 
 const TextArea = styled.textarea`
-  width: 100%;
+  width: 70%;
   // min-height: 30vmax;
   padding: 2rem;
   font-family: var(--font-text);
