@@ -1,53 +1,39 @@
 import React from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
-const Navbar: React.FC = () => (
-  <List>
-    <li>
-      <Title>Nikki 日記</Title>
-    </li>
-    <li>
-      <StyledLink exact to="/">
-        Dailies
-      </StyledLink>
-    </li>
-    <li>
-      <StyledLink exact to="/editor">
-        Editor
-      </StyledLink>
-    </li>
+import NavMenuButton from "./NavMenuButton";
 
-    <li>
-      <StyledLink exact to="/words">
-        Words
-      </StyledLink>
-    </li>
-    {/* <li>
-      <StyledLink exact to="/grammars">
-        Grammars
-      </StyledLink>
-    </li> */}
-  </List>
-);
-export default Navbar;
+const Navbar: React.FC<{
+  openDrawer: (
+    event:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
+}> = ({ openDrawer }) => {
+  return (
+    <Container>
+      <List>
+        <NavMenuButton openDrawer={openDrawer}></NavMenuButton>
+      </List>
+    </Container>
+  );
+};
 
+const Container = styled.div`
+  grid-area: navbar;
+  position: sticky;
+  box-shadow: 0px 1px 2px 0px rgba(60, 64, 67, 0.3),
+    0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+  height: 48px;
+  top: 0;
+  z-index: 50;
+`;
 const List = styled.ul`
   display: flex;
   align-items: center;
   // justify-content: space-around;
-  padding: 1rem;
-  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 2rem;
 `;
 
-const StyledLink = styled(NavLink)`
-  color: var(--font-color-main);
-  padding: 0 2rem;
-  &.active {
-    color: var(--font-color-dark);
-  }
-`;
-
-const Title = styled.h1`
-  color: var(--font-color-dark);
-  padding: 0 2rem 0 1rem;
-`;
+export default Navbar;
