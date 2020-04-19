@@ -1,4 +1,11 @@
-import React, { useState, FC, useEffect, ChangeEvent } from "react";
+import React, {
+  useState,
+  FC,
+  useEffect,
+  ChangeEvent,
+  useRef,
+  FocusEvent,
+} from "react";
 import Api from "../../api/Api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
@@ -35,38 +42,40 @@ const Translater: FC<{
   addToSelection: (source: string, target: string) => void;
   selection?: string;
 }> = ({ selection, addToTextAndSelection, addToSelection }) => {
-  const [sourceLanguage, setSourceLanguage] = useState<string>("");
-  const [targetLanguage, setTargetLanguage] = useState<string | undefined>("");
-  const [translationInProgress, setTranslationInProgess] = useState<boolean>(
-    false
+  const [sourceLanguageText, setSourceLanguageText] = useState<string>("");
+  const [targetLanguageText, setTargetLanguageText] = useState<string>("");
+  const [textToTranslate, setTextToTranslate] = useState<string>("");
+  const [translation, setTranslation] = useState<string>("");
+  const [currentFocus, setCurrentFocus] = useState<"source" | "target">(
+    "source"
   );
   const classes = useStyles();
+  const targetLanguage = "no";
+  const sourceLanguage = "en";
 
-  useEffect(() => {
-    setTargetLanguage(selection);
-    setSourceLanguage("");
-    setTranslationInProgess(false);
-  }, [selection]);
+  const handleFocus = (name: "source" | "target") => {
+    setCurrentFocus(name);
+  };
 
-  const handleTranslate = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setTranslationInProgess(true);
-    const translationWay = {
-      text: selection ? targetLanguage : sourceLanguage,
-      sourceLanguageCode: selection ? "no" : "en",
-      targetLanguageCode: selection ? "en" : "no",
-    };
-    Api.post("/translate", {
-      ...translationWay,
-    }).then(({ translation }) =>
-      selection
-        ? setSourceLanguage(translation)
-        : setTargetLanguage(translation)
-    );
+  const translateText = (text: string, focus: "source" | "target") => {
+    if (text.length > 0) {
+      const translationWay = {
+        text: text,
+        sourceLanguageCode:
+          focus === "source" ? sourceLanguage : targetLanguage,
+        targetLanguageCode:
+          focus === "source" ? targetLanguage : sourceLanguage,
+      };
+      console.log(translationWay);
+      Api.post("/translate", {
+        ...translationWay,
+      }).then(({ translation }) => setTranslation(translation));
+    }
   };
 
   const handlePlaySound = () => {
-    if (targetLanguage) {
-      Api.post("/speech", { text: targetLanguage }).then((res) => {
+    if (targetLanguageText) {
+      Api.post("/speech", { text: targetLanguageText }).then((res) => {
         const audio = new Audio(`${res.Location}?v=${Date.now()}`);
         if (audio) {
           audio.load();
@@ -76,60 +85,71 @@ const Translater: FC<{
     }
   };
 
-  const handleChangeSource = (event: ChangeEvent<HTMLTextAreaElement>) =>
-    setSourceLanguage(event.target.value);
-  const handleChangeTarget = (event: ChangeEvent<HTMLTextAreaElement>) =>
-    setTargetLanguage(event.target.value);
+  const handleChangeSource = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.target.value === "") {
+      setTranslation("");
+      setTargetLanguageText("");
+    }
+    setCurrentFocus(event.target.name as any);
+    setTextToTranslate(event.target.value);
+    setSourceLanguageText(event.target.value);
+  };
+
+  const handleChangeTarget = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.target.value === "") {
+      setTranslation("");
+      setSourceLanguageText("");
+    }
+    setCurrentFocus(event.target.name as any);
+    setTextToTranslate(event.target.value);
+    setTargetLanguageText(event.target.value);
+  };
+
+  useEffect(() => {
+    if (selection && selection.length > 0) {
+      setCurrentFocus("target");
+      setTargetLanguageText(selection);
+      setTextToTranslate(selection);
+    }
+  }, [selection]);
+
+  useEffect(() => {
+    if (textToTranslate && textToTranslate.length > 0) {
+      translateText(textToTranslate, currentFocus);
+    }
+  }, [textToTranslate]);
+
+  useEffect(() => {
+    if (currentFocus === "target") {
+      console.log("here", translation);
+      setSourceLanguageText(translation);
+    } else {
+      setTargetLanguageText(translation);
+    }
+  }, [translation]);
+
   return (
     <Card variant="outlined">
-      {/* <div>
-        <textarea
-          name="source"
-          value={sourceLanguage}
-          disabled={!!selection}
-          onChange={({ target }) => setSourceLanguage(target.value)}
-        ></textarea>
-        <FontAwesomeIcon
-          icon={faVolumeUp}
-          onClick={handlePlaySound}
-        ></FontAwesomeIcon>
-      </div> */}
-      {/* <div>
-        <textarea
-          name="target"
-          value={targetLanguage}
-          disabled={!!sourceLanguage}
-          onChange={({ target }) => setTargetLanguage(target.value)}
-        ></textarea>
-        <FontAwesomeIcon
-          icon={faVolumeUp}
-          onClick={handlePlaySound}
-        ></FontAwesomeIcon>
-      </div> */}
       <CardContent>
         <TranslaterContainer>
           <TranslaterCard
             language="English"
-            disabled={!!selection}
             onChange={handleChangeSource}
             name="source"
-            value={sourceLanguage}
+            value={sourceLanguageText}
+            onFocus={handleFocus}
           ></TranslaterCard>
           <TranslaterCard
             language="Japanese"
             name="target"
-            value={targetLanguage}
-            disabled={!!sourceLanguage}
+            value={targetLanguageText}
+            // disabled={!!sourceLanguageText}
             onChange={handleChangeTarget}
+            onFocus={handleFocus}
           ></TranslaterCard>
         </TranslaterContainer>
       </CardContent>
       <Divider></Divider>
-      {/* {!translationInProgress ? (
-        <button type="button" onClick={(event) => handleTranslate(event)}>
-          translate
-        </button>
-      ) : ( */}
       <CardActions className={classes.actions}>
         <div>
           <Tooltip title="swap languages">
@@ -148,9 +168,13 @@ const Translater: FC<{
             <IconButton
               onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 event.preventDefault();
-                if (sourceLanguage && targetLanguage) {
-                  const source = selection ? targetLanguage : sourceLanguage;
-                  const target = selection ? sourceLanguage : targetLanguage;
+                if (sourceLanguageText && targetLanguageText) {
+                  const source = selection
+                    ? targetLanguageText
+                    : sourceLanguageText;
+                  const target = selection
+                    ? sourceLanguageText
+                    : targetLanguageText;
                   return addToSelection(source, target);
                 }
                 return;
@@ -164,9 +188,9 @@ const Translater: FC<{
               <IconButton
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                   event.preventDefault();
-                  if (sourceLanguage && targetLanguage) {
-                    const source = targetLanguage;
-                    const target = sourceLanguage;
+                  if (sourceLanguageText && targetLanguageText) {
+                    const source = targetLanguageText;
+                    const target = sourceLanguageText;
                     return addToTextAndSelection(source, target);
                   }
                 }}
@@ -177,7 +201,6 @@ const Translater: FC<{
           )}
         </div>
       </CardActions>
-      {/* )} */}
     </Card>
   );
 };

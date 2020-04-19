@@ -1,4 +1,4 @@
-import React, { FC, ChangeEvent } from "react";
+import React, { FC, ChangeEvent, FocusEvent } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -25,12 +25,13 @@ const useStyles = makeStyles({
 });
 
 const TranslaterCard: FC<{
-  name: string;
+  name: "source" | "target";
   value: string | undefined;
   language: string;
-  disabled: boolean;
+  disabled?: boolean;
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-}> = ({ name, value, language, disabled, onChange }) => {
+  onFocus: (name: "source" | "target") => void;
+}> = ({ name, value, language, disabled, onChange, onFocus }) => {
   const classes = useStyles();
 
   return (
@@ -43,6 +44,14 @@ const TranslaterCard: FC<{
           disabled={disabled}
           rows={5}
           onChange={(event) => onChange(event)}
+          onFocus={(event) => {
+            if (
+              event.target.name === "source" ||
+              event.target.name === "target"
+            ) {
+              onFocus(name);
+            }
+          }}
         ></Textarea>
       </CardContent>
 
