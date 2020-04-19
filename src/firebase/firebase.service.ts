@@ -3,7 +3,6 @@ import { IDaily } from "../types/interfaces";
 import firebaseConfig from "./firebase.config";
 import "firebase/firestore";
 
-// Initialize Firebase
 class FirebaseService {
   private readonly app: firebase.app.App;
   private readonly db: firebase.firestore.Firestore;
@@ -13,7 +12,6 @@ class FirebaseService {
     this.enablePersistence();
   }
   enablePersistence() {
-    // offline data
     this.db
       .enablePersistence()
       .catch((error: firebase.firestore.FirestoreError) => {
@@ -26,7 +24,6 @@ class FirebaseService {
   }
 
   snapshot(callback: (type: string, data: IDaily, id: string) => void) {
-    // real time listener
     this.db
       .collection("dailies")
       .onSnapshot((snapshot: firebase.firestore.QuerySnapshot) => {
@@ -34,7 +31,6 @@ class FirebaseService {
           .docChanges()
           .forEach((change: firebase.firestore.DocumentChange) => {
             console.log(change, change.doc.data(), change.doc.id);
-            // if (change.type === "added") {
             callback(change.type, change.doc.data() as IDaily, change.doc.id);
           });
       });
@@ -92,9 +88,7 @@ class FirebaseService {
     callbackAdd: (id: string) => void,
     callbackUpdate: (document: any) => void
   ) {
-    // create doc if date does not exist yet
     const date = new Date().toLocaleDateString();
-
     const document = await this.checkItem(date);
     document ? callbackUpdate(document) : this.addItem(text, date, callbackAdd);
   }

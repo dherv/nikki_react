@@ -117,17 +117,15 @@ const Editor: React.FC = () => {
   };
 
   useEffect(() => {
-    if (db) {
-      checkDocumentOrCreate();
-    }
-  }, [db]);
+    return checkDocumentOrCreate();
+  }, []);
 
   useEffect(() => {
     console.log(textUntouched.current);
     if (text.length > 0 && !textUntouched.current) {
       db.updateItem(text, currentItemId);
     }
-  }, [text]);
+  }, [text, currentItemId, db]);
   return (
     <Layout>
       <EditorContainer>
@@ -147,7 +145,6 @@ const Editor: React.FC = () => {
         </StyledValidationErrorMessage>
         {/* <StyledButton onClick={handleSave}>Save</StyledButton> */}
       </EditorContainer>
-      <h1>hello</h1>
       <AsideRight title="current selection">{displayAsideRight()}</AsideRight>
     </Layout>
   );
