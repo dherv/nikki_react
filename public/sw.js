@@ -62,7 +62,10 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (!(event.request.url.indexOf("http") === 0)) return;
   // prevent cache anything coming from firestore
-  if (event.request.url.indexOf("firestore.googleapis.com") === -1) {
+  if (
+    event.request.url.indexOf("firestore.googleapis.com") === -1 &&
+    event.request.url.indexOf("api") === -1
+  ) {
     event.respondWith(
       caches
         .match(event.request)

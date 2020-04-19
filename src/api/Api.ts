@@ -1,17 +1,17 @@
 export default class Api {
   private static url(endpoint: string) {
-    return `http://localhost:5000${endpoint}`;
+    return `http://localhost:5000/api${endpoint}`;
   }
   static get(endpoint: string): Promise<any> {
     return fetch(this.url(endpoint))
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
           throw new Error();
         }
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }
   static post(endpoint: string, body: object) {
     return fetch(this.url(endpoint), {
@@ -20,21 +20,21 @@ export default class Api {
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       credentials: "same-origin", // include, *same-origin, omit
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *client
-      body: JSON.stringify(body) // body data type must match "Content-Type" header
+      body: JSON.stringify(body), // body data type must match "Content-Type" header
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
           throw new Error();
         }
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }
   static put() {}
   static delete() {}
