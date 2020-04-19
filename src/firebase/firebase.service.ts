@@ -54,17 +54,15 @@ class FirebaseService {
   }
 
   addItem(text: string, date: string, callbackAdd: (id: string) => void) {
-    const addToDatabase = async () => {
-      console.log("add called");
-      this.db
-        .collection("dailies")
-        .add({ userId: 1, languageId: 1, date, text })
-        .then((docRef: any) => {
-          callbackAdd(docRef.id);
-          console.log("document has been added");
-        })
-        .catch((error: Error) => console.log(error));
-    };
+    console.log("add called");
+    this.db
+      .collection("dailies")
+      .add({ userId: 1, languageId: 1, date, text })
+      .then((docRef: any) => {
+        callbackAdd(docRef.id);
+        console.log("document has been added");
+      })
+      .catch((error: Error) => console.log(error));
   }
 
   checkItem(date: string): Promise<any> {
