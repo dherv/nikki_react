@@ -19,6 +19,9 @@ import { IconButton } from "@material-ui/core";
 import Logo from "./Logo";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import CreateIcon from "@material-ui/icons/Create";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
+import ViewDayIcon from "@material-ui/icons/ViewDay";
 
 const drawerWidth = 240;
 
@@ -100,6 +103,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const links = [
+  {
+    icon: <CreateIcon fontSize="small" />,
+    url: "/editor",
+    name: "Editor",
+  },
+  {
+    icon: <ViewDayIcon fontSize="small" />,
+    url: "/dailies",
+    name: "Dailies",
+  },
+  {
+    icon: <TextFieldsIcon fontSize="small" />,
+    url: "/words",
+    name: "Words",
+  },
+];
+
 const NavMenu: FC<{
   closeDrawer: (
     event:
@@ -136,8 +157,8 @@ const NavMenu: FC<{
       </div>
       <Divider />
       <List>
-        {["Editor", "Dailies", "Words"].map((text, index) => (
-          <NavListItem to={`/${text.toLowerCase()}`} key={text}>
+        {links.map(({ icon, url, name }) => (
+          <NavListItem to={url} key={url}>
             <ListItemIcon
               style={{
                 height: 20,
@@ -145,13 +166,9 @@ const NavMenu: FC<{
                 color: "#484848",
               }}
             >
-              {index % 2 === 0 ? (
-                <InboxIcon fontSize="small" />
-              ) : (
-                <MailIcon fontSize="small" />
-              )}
+              {icon}
             </ListItemIcon>
-            <NavMenuText primary={text} />
+            <NavMenuText primary={name} />
           </NavListItem>
         ))}
       </List>
