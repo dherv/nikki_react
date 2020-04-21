@@ -19,7 +19,7 @@ import useDebounce from "../../hooks/useDebounce";
 
 const useStyles = makeStyles({
   actions: {
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
 });
 
@@ -154,55 +154,46 @@ const Translater: FC<{
       </CardContent>
       <Divider></Divider>
       <CardActions className={classes.actions}>
-        <div>
-          <Tooltip title="swap languages">
-            <IconButton>
-              <SwapHorizOutlinedIcon></SwapHorizOutlinedIcon>
-            </IconButton>
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip title="add to text">
-            <IconButton>
-              <ImportContactsOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="add to selection">
+        <Tooltip title="add to text">
+          <IconButton>
+            <ImportContactsOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="add to selection">
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+              event.preventDefault();
+              if (sourceLanguageText && targetLanguageText) {
+                const source = selection
+                  ? targetLanguageText
+                  : sourceLanguageText;
+                const target = selection
+                  ? sourceLanguageText
+                  : targetLanguageText;
+                return addToSelection(source, target);
+              }
+              return;
+            }}
+          >
+            <PlaylistAddOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+        {!selection && (
+          <Tooltip title="add to text and selection">
             <IconButton
               onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 event.preventDefault();
                 if (sourceLanguageText && targetLanguageText) {
-                  const source = selection
-                    ? targetLanguageText
-                    : sourceLanguageText;
-                  const target = selection
-                    ? sourceLanguageText
-                    : targetLanguageText;
-                  return addToSelection(source, target);
+                  const source = targetLanguageText;
+                  const target = sourceLanguageText;
+                  return addToTextAndSelection(source, target);
                 }
-                return;
               }}
             >
-              <PlaylistAddOutlinedIcon />
+              <AddIcon />
             </IconButton>
           </Tooltip>
-          {!selection && (
-            <Tooltip title="add to text and selection">
-              <IconButton
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                  event.preventDefault();
-                  if (sourceLanguageText && targetLanguageText) {
-                    const source = targetLanguageText;
-                    const target = sourceLanguageText;
-                    return addToTextAndSelection(source, target);
-                  }
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-        </div>
+        )}
       </CardActions>
     </Card>
   );
