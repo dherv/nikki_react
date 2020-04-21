@@ -1,22 +1,10 @@
-import React, {
-  useState,
-  FC,
-  useEffect,
-  ChangeEvent,
-  useRef,
-  FocusEvent,
-} from "react";
+import React, { useState, FC, useEffect, ChangeEvent } from "react";
 import Api from "../../api/Api";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import TranslaterCard from "./TranslaterCard";
 import {
-  Paper,
-  Button,
   Card,
   CardContent,
-  CardActionArea,
   CardActions,
   Divider,
   IconButton,
@@ -26,10 +14,8 @@ import {
 import SwapHorizOutlinedIcon from "@material-ui/icons/SwapHorizOutlined";
 import PlaylistAddOutlinedIcon from "@material-ui/icons/PlaylistAddOutlined";
 import ImportContactsOutlinedIcon from "@material-ui/icons/ImportContactsOutlined";
-import AddCircleOutlinedIcon from "@material-ui/icons/AddCircleOutlined";
-import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
-import PlusOneRoundedIcon from "@material-ui/icons/PlusOneRounded";
 import AddIcon from "@material-ui/icons/Add";
+import useDebounce from "../../hooks/useDebounce";
 
 const useStyles = makeStyles({
   actions: {
@@ -49,6 +35,9 @@ const Translater: FC<{
   const [currentFocus, setCurrentFocus] = useState<"source" | "target">(
     "source"
   );
+  const [isSearching, setIsSearching] = useState(false);
+  const debounceText = useDebounce(textToTranslate, 500);
+
   const classes = useStyles();
   const targetLanguage = "ja-JP";
   const sourceLanguage = "en-US";
@@ -57,20 +46,20 @@ const Translater: FC<{
     setCurrentFocus(name);
   };
 
-  const translateText = (text: string, focus: "source" | "target") => {
-    if (text.length > 0) {
-      const translationWay = {
-        text: text,
-        sourceLanguageCode:
-          focus === "source" ? sourceLanguage : targetLanguage,
-        targetLanguageCode:
-          focus === "source" ? targetLanguage : sourceLanguage,
-      };
-      console.log(translationWay);
-      Api.post("/translate", {
-        ...translationWay,
-      }).then(({ translation }) => setTranslation(translation));
-    }
+  const handleTranslation = (
+    text: string,
+    focus: "source" | "target"
+  ): Promise<{ translation: string }> => {
+    const translationWay = {
+      text: text,
+      sourceLanguageCode: focus === "source" ? sourceLanguage : targetLanguage,
+      targetLanguageCode: focus === "source" ? targetLanguage : sourceLanguage,
+    };
+    return Api.post("/translate", {
+      ...translationWay,
+    }).then((response) => {
+      return response;
+    });
   };
 
   const handlePlaySound = () => {
@@ -118,12 +107,6 @@ const Translater: FC<{
   }, [selection]);
 
   useEffect(() => {
-    if (textToTranslate && textToTranslate.length > 0) {
-      translateText(textToTranslate, currentFocus);
-    }
-  }, [textToTranslate]);
-
-  useEffect(() => {
     if (currentFocus === "target") {
       console.log("here", translation);
       setSourceLanguageText(translation);
@@ -131,6 +114,20 @@ const Translater: FC<{
       setTargetLanguageText(translation);
     }
   }, [translation]);
+
+  useEffect(() => {
+    if (debounceText) {
+      setIsSearching(true);
+      handleTranslation(textToTranslate, currentFocus).then(
+        ({ translation }) => {
+          setIsSearching(false);
+          setTranslation(translation);
+        }
+      );
+    } else {
+      setTranslation("");
+    }
+  }, [debounceText]);
 
   return (
     <Card variant="outlined">
