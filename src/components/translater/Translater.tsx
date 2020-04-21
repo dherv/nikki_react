@@ -50,8 +50,8 @@ const Translater: FC<{
     "source"
   );
   const classes = useStyles();
-  const targetLanguage = "no";
-  const sourceLanguage = "en";
+  const targetLanguage = "ja-JP";
+  const sourceLanguage = "en-US";
 
   const handleFocus = (name: "source" | "target") => {
     setCurrentFocus(name);
@@ -75,7 +75,11 @@ const Translater: FC<{
 
   const handlePlaySound = () => {
     if (targetLanguageText) {
-      Api.post("/speech", { text: targetLanguageText }).then((res) => {
+      Api.post("/speech", {
+        text: targetLanguageText,
+        languageCode: targetLanguage,
+        voiceType: "Wavenet",
+      }).then((res) => {
         const audio = new Audio(`${res.Location}?v=${Date.now()}`);
         if (audio) {
           audio.load();
@@ -133,19 +137,21 @@ const Translater: FC<{
       <CardContent>
         <TranslaterContainer>
           <TranslaterCard
-            language="English"
-            onChange={handleChangeSource}
             name="source"
+            language="English"
+            sound={false}
             value={sourceLanguageText}
+            onChange={handleChangeSource}
             onFocus={handleFocus}
           ></TranslaterCard>
           <TranslaterCard
-            language="Japanese"
             name="target"
+            language="Japanese"
+            sound={true}
             value={targetLanguageText}
-            // disabled={!!sourceLanguageText}
             onChange={handleChangeTarget}
             onFocus={handleFocus}
+            playSound={handlePlaySound}
           ></TranslaterCard>
         </TranslaterContainer>
       </CardContent>
