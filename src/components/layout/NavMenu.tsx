@@ -1,21 +1,14 @@
 import React, { FC } from "react";
 import clsx from "clsx";
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  useTheme,
-} from "@material-ui/core/styles";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { IconButton } from "@material-ui/core";
+import { IconButton, Hidden } from "@material-ui/core";
 import Logo from "./Logo";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -49,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     menuButton: {
-      marginRight: 36,
+      marginRight: theme.spacing(2),
     },
     hide: {
       display: "none",
@@ -76,7 +69,6 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: "hidden",
-      width: theme.spacing(7) + 1,
       [theme.breakpoints.up("sm")]: {
         width: theme.spacing(9) + 1,
       },
@@ -85,15 +77,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-start",
-      // padding: theme.spacing(0, 1)
-      // necessary for content to be below app bar
     },
     footer: {
       color: "#ecec",
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-end",
-      padding: theme.spacing(0, 1),
+      padding: theme.spacing(1, 2),
     },
     content: {
       flexGrow: 1,
@@ -129,26 +119,24 @@ const NavMenu: FC<{
       | React.MouseEvent<HTMLAnchorElement, MouseEvent>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
+  toggleDrawer: (
+    event:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
   open: boolean;
-}> = ({ closeDrawer, open }) => {
+  container?: any;
+}> = ({ closeDrawer, toggleDrawer, open }) => {
   const classes = useStyles();
 
-  const theme = useTheme();
-  return (
-    <Drawer
-      style={{ gridArea: "nav" }}
-      variant="permanent"
-      className={clsx(classes.drawer, {
-        [classes.drawerOpen]: open,
-        [classes.drawerClose]: !open,
-      })}
-      classes={{
-        paper: clsx({
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        }),
-      }}
-    >
+  const handleDrawerToggle = (event: React.MouseEvent<HTMLDivElement>) => {
+    closeDrawer(event);
+  };
+
+  const drawer = (
+    <>
       <div className={classes.toolbar}>
         <LogoContainer>
           <Logo></Logo>
@@ -174,15 +162,61 @@ const NavMenu: FC<{
       </List>
       <Divider />
       <div className={classes.footer}>
-        <IconButton onClick={closeDrawer}>
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon style={{ color: "#484848" }} />
-          ) : (
-            <ChevronLeftIcon style={{ color: "#484848" }} />
-          )}
+        <IconButton
+          disableRipple
+          size="medium"
+          color="primary"
+          onClick={toggleDrawer}
+        >
+          {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </div>
-    </Drawer>
+    </>
+  );
+  return (
+    <nav>
+      {/* js implementation has the benefit of not rendering any content at all unless the breakpoint is met. */}
+      <Hidden smUp implementation="js">
+        <Drawer
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+          variant="temporary"
+          open={open}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: false, // Better open performance on mobile.
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+      <Hidden xsDown implementation="js">
+        <Drawer
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+          variant="permanent"
+          open={open}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+    </nav>
   );
 };
 

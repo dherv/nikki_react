@@ -17,10 +17,10 @@ const NavMenuButton: FC<{
         disableFocusRipple
         disableRipple
         size="small"
-        color="inherit"
+        color="primary"
         aria-label="open drawer"
-        edge="start"
-        onClick={event => openDrawer(event)}
+        // edge="start"
+        onClick={(event) => openDrawer(event)}
       >
         <MenuIcon />
       </IconButton>

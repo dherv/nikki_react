@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect, ChangeEvent } from "react";
+import React, { useState, FC, useEffect, ChangeEvent, MouseEvent } from "react";
 import Api from "../../api/Api";
 import styled from "styled-components";
 import TranslaterCard from "./TranslaterCard";
@@ -11,23 +11,36 @@ import {
   Tooltip,
   makeStyles,
 } from "@material-ui/core";
-import SwapHorizOutlinedIcon from "@material-ui/icons/SwapHorizOutlined";
 import PlaylistAddOutlinedIcon from "@material-ui/icons/PlaylistAddOutlined";
 import ImportContactsOutlinedIcon from "@material-ui/icons/ImportContactsOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import useDebounce from "../../hooks/useDebounce";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   actions: {
     justifyContent: "flex-end",
   },
-});
+  card: {
+    maxWidth: 960,
+    minWidth: 600,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      minWidth: "100%",
+    },
+  },
+}));
 
 const Translater: FC<{
   addToTextAndSelection: (source: string, target: string) => void;
-  addToSelection: (source: string, target: string) => void;
+  addToSelectionOnly: (source: string, target: string) => void;
+  addToTextOnly: (targetText: string) => void;
   selection?: string;
-}> = ({ selection, addToTextAndSelection, addToSelection }) => {
+}> = ({
+  selection,
+  addToTextAndSelection,
+  addToSelectionOnly,
+  addToTextOnly,
+}) => {
   const [sourceLanguageText, setSourceLanguageText] = useState<string>("");
   const [targetLanguageText, setTargetLanguageText] = useState<string>("");
   const [textToTranslate, setTextToTranslate] = useState<string>("");
@@ -98,6 +111,33 @@ const Translater: FC<{
     setTargetLanguageText(event.target.value);
   };
 
+  const handleAddToSelectionOnly = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    if (sourceLanguageText && targetLanguageText) {
+      return addToSelectionOnly(sourceLanguageText, targetLanguageText);
+    }
+    return;
+  };
+
+  const handleAddToTextOnly = () => {
+    // check taht selection is not active
+    if (!selection) {
+      addToTextOnly(targetLanguageText);
+    }
+    // add to text
+  };
+
+  const handleAddToTextAndSelection = (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    if (sourceLanguageText && targetLanguageText) {
+      return addToTextAndSelection(sourceLanguageText, targetLanguageText);
+    }
+  };
+
   useEffect(() => {
     if (selection && selection.length > 0) {
       setCurrentFocus("target");
@@ -130,7 +170,7 @@ const Translater: FC<{
   }, [debounceText]);
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" className={classes.card}>
       <CardContent>
         <TranslaterContainer>
           <TranslaterCard
@@ -155,41 +195,18 @@ const Translater: FC<{
       <Divider></Divider>
       <CardActions className={classes.actions}>
         <Tooltip title="add to text">
-          <IconButton>
+          <IconButton onClick={handleAddToTextOnly}>
             <ImportContactsOutlinedIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="add to selection">
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-              event.preventDefault();
-              if (sourceLanguageText && targetLanguageText) {
-                const source = selection
-                  ? targetLanguageText
-                  : sourceLanguageText;
-                const target = selection
-                  ? sourceLanguageText
-                  : targetLanguageText;
-                return addToSelection(source, target);
-              }
-              return;
-            }}
-          >
+          <IconButton onClick={handleAddToSelectionOnly}>
             <PlaylistAddOutlinedIcon />
           </IconButton>
         </Tooltip>
         {!selection && (
           <Tooltip title="add to text and selection">
-            <IconButton
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                event.preventDefault();
-                if (sourceLanguageText && targetLanguageText) {
-                  const source = targetLanguageText;
-                  const target = sourceLanguageText;
-                  return addToTextAndSelection(source, target);
-                }
-              }}
-            >
+            <IconButton onClick={handleAddToTextAndSelection}>
               <AddIcon />
             </IconButton>
           </Tooltip>
@@ -201,8 +218,12 @@ const Translater: FC<{
 
 const TranslaterContainer = styled.div`
   display: flex;
+  // flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 export default Translater;

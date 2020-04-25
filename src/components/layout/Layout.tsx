@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar";
 import styled from "styled-components";
 import NavMenu from "./NavMenu";
+import SelectionList from "../selection/SelectionList";
 
 const Layout: React.FC<{}> = ({ children }) => {
-  const [drawerState, setDrawerState] = React.useState(false);
+  const [drawerState, setDrawerState] = useState(false);
+  const [listOpen, setListOpen] = useState(false);
 
   const toggleDrawer = (open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent
@@ -17,24 +19,48 @@ const Layout: React.FC<{}> = ({ children }) => {
     ) {
       return;
     }
-
-    console.log(open);
-
     setDrawerState(open);
+  };
+
+  const toggleList = (open: boolean) => (
+    event: React.KeyboardEvent | React.MouseEvent
+  ) => {
+    if (
+      event.type === "keydown" &&
+      ((event as React.KeyboardEvent).key === "Tab" ||
+        (event as React.KeyboardEvent).key === "Shift")
+    ) {
+      return;
+    }
+    setListOpen(open);
   };
 
   const openDrawer = () => toggleDrawer(true);
   const closeDrawer = () => toggleDrawer(false);
+  const openList = () => toggleList(true);
+  const closeList = () => toggleList(false);
+
+  const toggleDrawerWithType = () => {
+    const type = !drawerState;
+    return toggleDrawer(type);
+  };
+
   return (
     <Container>
-      <NavMenu closeDrawer={closeDrawer()} open={drawerState}></NavMenu>
-      <Navbar openDrawer={openDrawer()}></Navbar>
+      <NavMenu
+        toggleDrawer={toggleDrawerWithType()}
+        closeDrawer={closeDrawer()}
+        open={drawerState}
+      ></NavMenu>
+      <SelectionList open={listOpen} closeList={closeList()}></SelectionList>
+      <Navbar openDrawer={openDrawer()} toggleList={openList()}></Navbar>
       <Main style={{ gridArea: "main" }}>
         <MainContainer>{children}</MainContainer>
       </Main>
     </Container>
   );
 };
+
 const Container = styled.div`
   display: grid;
   grid-template-areas:
@@ -47,6 +73,7 @@ const Container = styled.div`
 `;
 const Main = styled.main`
   margin-top: 4rem;
+  padding: 1rem;
 `;
 const MainContainer = styled.div`
   display: flex;

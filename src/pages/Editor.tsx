@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Layout from "../components/layout/Layout";
 import styled from "styled-components";
-import { AsideRight, AsideLeftDefault } from "../components/layout/Asides";
 import { ISelection } from "../types/interfaces";
-import DotWithWord from "../components/ui/DotWithWord";
-import Api from "../api/Api";
-import Translate from "../components/translater/Translater";
 import FirebaseContext from "../contexts/FirebaseContext";
 import Translater from "../components/translater/Translater";
 
@@ -38,56 +34,26 @@ const Editor: React.FC = () => {
     setSelection(selection);
   };
 
-  const handleSave = () => {
-    if (text.length > 10) {
-      const daily = {
-        text,
-        words: saved,
-      };
-      return Api.post("/dailies", daily).then((response) =>
-        console.log({ response })
-      );
-    } else {
-      return setShowValidationErrorMessage(true);
-    }
+  const handleAddToTextAndSelection = (
+    sourceText: string,
+    targetText: string
+  ) => {
+    handleAddToSelectionOnly(sourceText, targetText);
+    handleAddToTextOnly(targetText);
   };
 
-  const addToTextAndSelection = (source: string, target: string) => {
+  const handleAddToSelectionOnly = (sourceText: string, targetText: string) => {
     const toSave: ISelection = {
-      text: source,
-      translation: target,
+      text: sourceText,
+      translation: targetText,
     };
-    setSaved([...saved, toSave]);
-    setText(`${text} ${source}`);
-  };
-
-  const addToSelection = (source: string, target: string) => {
-    const toSave: ISelection = {
-      text: target,
-      translation: source,
-    };
+    console.log({ toSave });
     setSaved([...saved, toSave]);
   };
 
-  const displayAsideRight = () => {
-    return (
-      <div>
-        <ul>
-          {saved.map((s, i) => (
-            <StyledDotWithWordListItem key={`${i}_${s.text}`}>
-              <DotWithWord
-                typeOrColor="words"
-                word={s.text}
-                translation={s.translation}
-              ></DotWithWord>
-            </StyledDotWithWordListItem>
-          ))}
-        </ul>
-      </div>
-    );
+  const handleAddToTextOnly = (targetText: string) => {
+    setText(`${text} ${targetText}`);
   };
-
-  const displayAsideLeft = () => <AsideLeftDefault></AsideLeftDefault>;
 
   const callbackAdd = (id: string) => {
     // set current id
@@ -112,7 +78,6 @@ const Editor: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(textUntouched.current);
     if (text.length > 0 && !textUntouched.current) {
       db.updateItem(text, currentItemId);
     }
@@ -132,18 +97,12 @@ const Editor: React.FC = () => {
           placeholder="type your text here"
         ></TextArea>
         <Translater
-          addToTextAndSelection={(source, target) =>
-            addToTextAndSelection(source, target)
-          }
-          addToSelection={(source, target) => addToSelection(source, target)}
+          addToTextAndSelection={handleAddToTextAndSelection}
+          addToSelectionOnly={handleAddToSelectionOnly}
+          addToTextOnly={handleAddToTextOnly}
           selection={selection}
         ></Translater>
-        {/* <StyledValidationErrorMessage visible={showValidationErrorMessage}>
-          Please enter at least 10 characters
-        </StyledValidationErrorMessage> */}
-        {/* <StyledButton onClick={handleSave}>Save</StyledButton> */}
       </EditorContainer>
-      {/* <AsideRight title="current selection">{displayAsideRight()}</AsideRight> */}
     </Layout>
   );
 };
@@ -153,27 +112,16 @@ const EditorContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   min-width: 50%;
-  margin-left: 32px;
-`;
-
-const StyledValidationErrorMessage = styled.p<{ visible: boolean }>`
-  color: #dc3545;
-  opacity: ${(props) => (props.visible ? 1 : 0)};
-  margin: 2rem 0;
-`;
-const StyledDotWithWordListItem = styled.li`
-  margin: 1rem 0;
+  @media (min-width: 960px) {
+    margin-right: 250px;
+  }
 `;
 
 const TextArea = styled.textarea`
-  width: 70%;
-  // min-height: 30vmax;
+  width: 60%;
   padding: 2rem;
   font-family: var(--font-text);
   color: var(--font-color-dark);
-  // border-radius: 8px;
-  // border: 1px solid rgba(118, 118, 118, 0.2);
-  // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border: none;
   caret-color: rgba(118, 118, 118, 0.2);
   resize: none;

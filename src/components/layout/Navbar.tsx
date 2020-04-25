@@ -1,6 +1,23 @@
 import React from "react";
-import styled from "styled-components";
 import NavMenuButton from "./NavMenuButton";
+import { useLocation } from "react-router-dom";
+import ViewListIcon from "@material-ui/icons/ViewList";
+import {
+  IconButton,
+  Hidden,
+  AppBar,
+  Toolbar,
+  makeStyles,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  toolbar: {
+    justifyContent: "space-between",
+  },
+  listIcon: {
+    marginLeft: "auto",
+  },
+}));
 
 const Navbar: React.FC<{
   openDrawer: (
@@ -10,30 +27,38 @@ const Navbar: React.FC<{
       | React.MouseEvent<HTMLAnchorElement, MouseEvent>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
-}> = ({ openDrawer }) => {
+  toggleList: (
+    event:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
+}> = ({ openDrawer, toggleList }) => {
+  const location = useLocation();
+  const classes = useStyles();
+
   return (
-    <Container>
-      <List>
-        <NavMenuButton openDrawer={openDrawer}></NavMenuButton>
-      </List>
-    </Container>
+    <AppBar color="inherit">
+      <Toolbar variant="dense" className={classes.toolbar}>
+        <Hidden smUp implementation="js">
+          <NavMenuButton openDrawer={openDrawer}></NavMenuButton>
+        </Hidden>
+        {location.pathname === "/editor" ? (
+          <Hidden mdUp implementation="js">
+            <IconButton
+              size="small"
+              color="primary"
+              className={classes.listIcon}
+              onClick={(event) => toggleList(event)}
+            >
+              <ViewListIcon></ViewListIcon>
+            </IconButton>
+          </Hidden>
+        ) : null}
+      </Toolbar>
+    </AppBar>
   );
 };
-
-const Container = styled.div`
-  grid-area: navbar;
-  position: sticky;
-  box-shadow: 0px 1px 2px 0px rgba(60, 64, 67, 0.3),
-    0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-  height: 48px;
-  top: 0;
-  z-index: 50;
-`;
-const List = styled.ul`
-  display: flex;
-  align-items: center;
-  // justify-content: space-around;
-  padding: 0.5rem 2rem;
-`;
 
 export default Navbar;
