@@ -1,14 +1,13 @@
-import React, { useEffect, FC } from "react";
-import Divider from "@material-ui/core/Divider";
+import React, { useEffect, FC, useContext, useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import FirebaseContext from "../../contexts/FirebaseContext";
+import FirebaseService from "../../firebase/firebase.module";
+import { ISelection } from "../../types/interfaces";
 
 const drawerWidth = 240;
 
@@ -53,6 +52,7 @@ interface ResponsiveDrawerProps {
    * Injected by the documentation to work in an iframe.
    * You won't need it on your project.
    */
+  id: string;
   container?: any;
   open: boolean;
   closeList: (
@@ -65,16 +65,32 @@ interface ResponsiveDrawerProps {
 }
 
 const SelectionList: FC<ResponsiveDrawerProps> = ({
+  id,
   container,
   open,
   closeList,
 }) => {
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [listItems, setListItems] = useState<
+    {
+      title: string;
+      subtitle: string;
+    }[]
+  >([]);
+  const db = useContext(FirebaseContext) as FirebaseService;
 
   const handleDrawerToggle = (event: React.MouseEvent<HTMLDivElement>) => {
     closeList(event);
   };
+
+  useEffect(() => {
+    const callback = (type: string, data: ISelection, id: string) => {
+      const { text, translation } = data;
+      setListItems((prev) => [...prev, { title: translation, subtitle: text }]);
+    };
+    db.snapshot("words", callback, ["dailyId", "==", id]);
+  }, []);
 
   useEffect(() => {
     setMobileOpen(open);
@@ -83,28 +99,13 @@ const SelectionList: FC<ResponsiveDrawerProps> = ({
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
+      {listItems.map(({ title, subtitle }) => (
+        <List className={classes.root}>
+          <ListItem>
+            <ListItemText primary={title} secondary={subtitle} />
           </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+        </List>
+      ))}
     </div>
   );
 

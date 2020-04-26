@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { ISelection } from "../types/interfaces";
 import FirebaseContext from "../contexts/FirebaseContext";
 import Translater from "../components/translater/Translater";
+import FirebaseService from "../firebase/firebase.module";
+import SelectionList from "../components/selection/SelectionList";
 
 const Editor: React.FC = () => {
   const [text, setText] = useState<string>("");
@@ -14,7 +16,7 @@ const Editor: React.FC = () => {
   >(false);
   const [currentItemId, setCurrentItemId] = useState<string>("");
   const textUntouched = useRef(true);
-  const db = useContext(FirebaseContext);
+  const db = useContext(FirebaseContext) as FirebaseService;
 
   const handleText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     textUntouched.current = false;
@@ -46,9 +48,13 @@ const Editor: React.FC = () => {
     const toSave: ISelection = {
       text: sourceText,
       translation: targetText,
+      dailyId: `dailies/${currentItemId}`,
     };
     console.log({ toSave });
-    setSaved([...saved, toSave]);
+
+    // add to firebase with correct id
+    db.addItem("words", toSave);
+    // setSaved([...saved, toSave]);
   };
 
   const handleAddToTextOnly = (targetText: string) => {
@@ -70,7 +76,7 @@ const Editor: React.FC = () => {
 
   const checkDocumentOrCreate = () => {
     // create doc if date does not exist yet
-    db.checkDocumentOrCreate(text, callbackAdd, callbackUpdate);
+    db.checkDocumentOrCreate("dailies", text, callbackAdd, callbackUpdate);
   };
 
   useEffect(() => {
@@ -79,30 +85,43 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     if (text.length > 0 && !textUntouched.current) {
-      db.updateItem(text, currentItemId);
+      db.updateItem("dailies", text, currentItemId);
     }
   }, [text, currentItemId, db]);
+
+  const mainComponent = (
+    <EditorContainer>
+      <TextArea
+        style={{ height: "100%" }}
+        onSelect={(event) =>
+          handleSelect(event as React.ChangeEvent<HTMLTextAreaElement>)
+        }
+        onChange={(event) =>
+          handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
+        }
+        value={text}
+        placeholder="type your text here"
+      ></TextArea>
+      <Translater
+        addToTextAndSelection={handleAddToTextAndSelection}
+        addToSelectionOnly={handleAddToSelectionOnly}
+        addToTextOnly={handleAddToTextOnly}
+        selection={selection}
+      ></Translater>
+    </EditorContainer>
+  );
+
   return (
-    <Layout>
-      <EditorContainer>
-        <TextArea
-          style={{ height: "100%" }}
-          onSelect={(event) =>
-            handleSelect(event as React.ChangeEvent<HTMLTextAreaElement>)
-          }
-          onChange={(event) =>
-            handleText(event as React.ChangeEvent<HTMLTextAreaElement>)
-          }
-          value={text}
-          placeholder="type your text here"
-        ></TextArea>
-        <Translater
-          addToTextAndSelection={handleAddToTextAndSelection}
-          addToSelectionOnly={handleAddToSelectionOnly}
-          addToTextOnly={handleAddToTextOnly}
-          selection={selection}
-        ></Translater>
-      </EditorContainer>
+    <Layout
+      render={(listOpen: any, closeList: any) => (
+        <SelectionList
+          id={currentItemId}
+          open={listOpen}
+          closeList={closeList}
+        ></SelectionList>
+      )}
+    >
+      {mainComponent}
     </Layout>
   );
 };

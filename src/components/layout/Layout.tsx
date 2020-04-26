@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import styled from "styled-components";
 import NavMenu from "./NavMenu";
-import SelectionList from "../selection/SelectionList";
 
-const Layout: React.FC<{}> = ({ children }) => {
+const Layout: React.FC<{
+  render?: (listOpen: any, closeList: any) => JSX.Element;
+}> = ({ children, render }) => {
   const [drawerState, setDrawerState] = useState(false);
   const [listOpen, setListOpen] = useState(false);
 
   const toggleDrawer = (open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent
   ) => {
-    console.log("called");
     if (
       event.type === "keydown" &&
       ((event as React.KeyboardEvent).key === "Tab" ||
@@ -52,9 +52,9 @@ const Layout: React.FC<{}> = ({ children }) => {
         closeDrawer={closeDrawer()}
         open={drawerState}
       ></NavMenu>
-      <SelectionList open={listOpen} closeList={closeList()}></SelectionList>
+      {render && render(listOpen, closeList())}
       <Navbar openDrawer={openDrawer()} toggleList={openList()}></Navbar>
-      <Main style={{ gridArea: "main" }}>
+      <Main>
         <MainContainer>{children}</MainContainer>
       </Main>
     </Container>
@@ -72,8 +72,10 @@ const Container = styled.div`
   overflow: hidden;
 `;
 const Main = styled.main`
+  grid-area: main
   margin-top: 4rem;
   padding: 1rem;
+  overflow: auto
 `;
 const MainContainer = styled.div`
   display: flex;

@@ -3,10 +3,11 @@ import Layout from "../components/layout/Layout";
 import { Main, MainTitle } from "../styled/GlobalComponents";
 import { IDaily } from "../types/interfaces";
 import FirebaseContext from "../contexts/FirebaseContext";
+import FirebaseService from "../firebase/firebase.module";
 
 const Dailies = () => {
   const [dailies, setDailies] = useState<IDaily[]>([]);
-  const db = useContext(FirebaseContext);
+  const db = useContext(FirebaseContext) as FirebaseService;
 
   const callback = (type: string, data: IDaily, id: string) => {
     if (type === "added") {
@@ -16,7 +17,7 @@ const Dailies = () => {
 
   useEffect(() => {
     // const db = dbFactory(callback);
-    db.snapshot(callback);
+    db.snapshot("dailies", callback);
   }, [db]);
 
   // useEffect(() => {

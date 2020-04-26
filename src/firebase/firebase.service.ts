@@ -1,5 +1,4 @@
 import * as firebase from "firebase/app";
-import { IDaily } from "../types/interfaces";
 import firebaseConfig from "./firebase.config";
 import "firebase/firestore";
 
@@ -23,22 +22,34 @@ class FirebaseService {
       });
   }
 
-  snapshot(callback: (type: string, data: IDaily, id: string) => void) {
-    this.db
-      .collection("dailies")
-      .onSnapshot((snapshot: firebase.firestore.QuerySnapshot) => {
-        snapshot
-          .docChanges()
-          .forEach((change: firebase.firestore.DocumentChange) => {
-            console.log(change, change.doc.data(), change.doc.id);
-            callback(change.type, change.doc.data() as IDaily, change.doc.id);
-          });
-      });
+  snapshot(
+    collection: string,
+    callback: (type: string, data: any, id: string) => void,
+    condition?: [
+      string | firebase.firestore.FieldPath,
+      firebase.firestore.WhereFilterOp,
+      any
+    ]
+  ) {
+    let ref = this.db.collection(collection);
+
+    if (condition) {
+      const [fieldPath, opStr, value] = condition;
+      ref.where(fieldPath, opStr, value);
+    }
+    ref.onSnapshot((snapshot: firebase.firestore.QuerySnapshot) => {
+      snapshot
+        .docChanges()
+        .forEach((change: firebase.firestore.DocumentChange) => {
+          console.log(change, change.doc.data(), change.doc.id);
+          callback(change.type, change.doc.data(), change.doc.id);
+        });
+    });
   }
 
-  updateItem(text: string, id: string) {
+  updateItem(collection: string, text: string, id: string) {
     this.db
-      .collection("dailies")
+      .collection(collection)
       .doc(id)
       .set({ text }, { merge: true })
       .then((docRef: any) => {
@@ -49,21 +60,25 @@ class FirebaseService {
       );
   }
 
-  addItem(text: string, date: string, callbackAdd: (id: string) => void) {
+  addItem(
+    collection: string,
+    objectToCreateOrUpdate: any,
+    callbackAdd?: (id: string) => void
+  ) {
     console.log("add called");
     this.db
-      .collection("dailies")
-      .add({ userId: 1, languageId: 1, date, text })
+      .collection(collection)
+      .add(objectToCreateOrUpdate)
       .then((docRef: any) => {
-        callbackAdd(docRef.id);
+        if (callbackAdd) callbackAdd(docRef.id);
         console.log("document has been added");
       })
       .catch((error: Error) => console.log(error));
   }
 
-  checkItem(date: string): Promise<any> {
+  checkItemByDateAndUserId(collection: string, date: string): Promise<any> {
     return this.db
-      .collection("dailies")
+      .collection(collection)
       .where("userId", "==", 1)
       .where("date", "==", date)
       .get()
@@ -84,13 +99,18 @@ class FirebaseService {
   }
 
   async checkDocumentOrCreate(
+    collection: string,
     text: string,
     callbackAdd: (id: string) => void,
     callbackUpdate: (document: any) => void
   ) {
     const date = new Date().toLocaleDateString();
-    const document = await this.checkItem(date);
-    document ? callbackUpdate(document) : this.addItem(text, date, callbackAdd);
+    const document = await this.checkItemByDateAndUserId(collection, date);
+
+    const objectToCreateOrUpdate = { text, date, userId: 1, languageId: 1 };
+    document
+      ? callbackUpdate(document)
+      : this.addItem(collection, objectToCreateOrUpdate, callbackAdd);
   }
 }
 export default FirebaseService;

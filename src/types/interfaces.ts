@@ -1,6 +1,7 @@
 export interface ISelection {
   text: string;
   translation: string;
+  dailyId: string;
   example?: string;
   explanation?: string;
 }
