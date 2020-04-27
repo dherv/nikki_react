@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
   card: {
-    maxWidth: 960,
-    minWidth: 600,
+    width: 600,
+    overflow: "visible",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       minWidth: "100%",
@@ -50,7 +50,7 @@ const Translater: FC<{
   );
   const [isSearching, setIsSearching] = useState(false);
   const debounceText = useDebounce(textToTranslate, 500);
-
+  const [audio, setAudio] = useState<any>();
   const classes = useStyles();
   const targetLanguage = "ja-JP";
   const sourceLanguage = "en-US";
@@ -75,17 +75,28 @@ const Translater: FC<{
     });
   };
 
-  const handlePlaySound = () => {
+  function playAudio(audio: any) {
+    try {
+      audio.load();
+      audio.play();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const handlePlaySound = async () => {
+    // hack: play audio on click to prevent browser autoplay blocking on async calls
+    let audio = new Audio();
+    audio.play();
     if (targetLanguageText) {
       Api.post("/speech", {
         text: targetLanguageText,
         languageCode: targetLanguage,
         voiceType: "Wavenet",
-      }).then((res) => {
-        const audio = new Audio(`${res.Location}?v=${Date.now()}`);
+      }).then(({ Location }) => {
         if (audio) {
-          audio.load();
-          audio.play();
+          audio.src = `${Location}?v=${Date.now()}`;
+          playAudio(audio);
         }
       });
     }
@@ -141,6 +152,7 @@ const Translater: FC<{
   useEffect(() => {
     if (selection && selection.length > 0) {
       setCurrentFocus("target");
+      console.log("TARGET LANGUAGE", selection);
       setTargetLanguageText(selection);
       setTextToTranslate(selection);
     }
@@ -148,7 +160,6 @@ const Translater: FC<{
 
   useEffect(() => {
     if (currentFocus === "target") {
-      console.log("here", translation);
       setSourceLanguageText(translation);
     } else {
       setTargetLanguageText(translation);
@@ -218,10 +229,10 @@ const Translater: FC<{
 
 const TranslaterContainer = styled.div`
   display: flex;
-  // flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   height: 100%;
+
   @media (max-width: 600px) {
     flex-direction: column;
   }

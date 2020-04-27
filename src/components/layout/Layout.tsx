@@ -80,6 +80,7 @@ const Main = styled.main`
 const MainContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  height: 100%;
 `;
 
 export default Layout;
