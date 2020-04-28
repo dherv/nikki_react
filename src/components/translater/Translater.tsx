@@ -150,11 +150,13 @@ const Translater: FC<{
   };
 
   useEffect(() => {
+    setCurrentFocus("target");
     if (selection && selection.length > 0) {
-      setCurrentFocus("target");
-      console.log("TARGET LANGUAGE", selection);
       setTargetLanguageText(selection);
       setTextToTranslate(selection);
+    } else {
+      setTargetLanguageText("");
+      setTextToTranslate("");
     }
   }, [selection]);
 

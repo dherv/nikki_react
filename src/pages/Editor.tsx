@@ -6,7 +6,13 @@ import FirebaseContext from "../contexts/FirebaseContext";
 import Translater from "../components/translater/Translater";
 import FirebaseService from "../firebase/firebase.module";
 import SelectionList from "../components/selection/SelectionList";
-import { Hidden, Dialog, IconButton } from "@material-ui/core";
+import {
+  Hidden,
+  Dialog,
+  IconButton,
+  SnackbarContent,
+  Snackbar,
+} from "@material-ui/core";
 import TranslateOutlinedIcon from "@material-ui/icons/TranslateOutlined";
 
 const Editor: React.FC = () => {
@@ -32,11 +38,17 @@ const Editor: React.FC = () => {
   const handleSelect = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     // selectionStart and selectionEnd are available on textarea
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
-    const selection = event.target.value.slice(
-      event.target.selectionStart,
-      event.target.selectionEnd
-    );
-    setSelection(selection);
+    const selection = event.target.value
+      .slice(event.target.selectionStart, event.target.selectionEnd)
+      .trim();
+
+    if (selection && selection.length > 0) {
+      setSelection(selection);
+      setOpenDialog(true);
+    } else {
+      setSelection("");
+      setOpenDialog(false);
+    }
   };
 
   const handleAddToTextAndSelection = (
@@ -57,7 +69,6 @@ const Editor: React.FC = () => {
 
     // add to firebase with correct id
     db.addItem("words", toSave);
-    // setSaved([...saved, toSave]);
   };
 
   const handleAddToTextOnly = (targetText: string) => {
@@ -85,6 +96,27 @@ const Editor: React.FC = () => {
   useEffect(() => {
     return checkDocumentOrCreate();
   }, []);
+
+  const clearDomSelection = () => {
+    const currentSelection = window.getSelection
+      ? window.getSelection()
+      : document.getSelection();
+
+    if (currentSelection) {
+      if (currentSelection.empty) {
+        // Chrome
+        currentSelection.empty();
+      } else if (currentSelection.removeAllRanges) {
+        // Firefox
+        currentSelection.removeAllRanges();
+      }
+    }
+    setSelection("");
+  };
+
+  const closeDialog = () => {
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     if (text.length > 0 && !textUntouched.current) {
@@ -132,12 +164,14 @@ const Editor: React.FC = () => {
       </Hidden>
       <Hidden smUp implementation="js">
         <Dialog
-          onBackdropClick={() => setOpenDialog(false)}
           aria-labelledby="simple-dialog-title"
           open={openDialog}
           maxWidth="xl"
           fullWidth={true}
           keepMounted
+          onBackdropClick={closeDialog}
+          onExiting={clearDomSelection}
+          transitionDuration={{ enter: 500, exit: 500 }}
         >
           <Translater
             addToTextAndSelection={handleAddToTextAndSelection}
