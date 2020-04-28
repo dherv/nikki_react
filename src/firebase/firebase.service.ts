@@ -24,26 +24,24 @@ class FirebaseService {
 
   snapshot(
     collection: string,
-    callback: (type: string, data: any, id: string) => void,
+    callback: (docs: firebase.firestore.DocumentData[]) => void,
     condition?: [
       string | firebase.firestore.FieldPath,
       firebase.firestore.WhereFilterOp,
       any
     ]
   ) {
-    let ref = this.db.collection(collection);
+    let ref = null;
 
     if (condition) {
       const [fieldPath, opStr, value] = condition;
-      ref.where(fieldPath, opStr, value);
+      ref = this.db.collection(collection).where(fieldPath, opStr, value);
+    } else {
+      ref = this.db.collection(collection);
     }
+
     ref.onSnapshot((snapshot: firebase.firestore.QuerySnapshot) => {
-      snapshot
-        .docChanges()
-        .forEach((change: firebase.firestore.DocumentChange) => {
-          console.log(change, change.doc.data(), change.doc.id);
-          callback(change.type, change.doc.data(), change.doc.id);
-        });
+      callback(snapshot.docs);
     });
   }
 
