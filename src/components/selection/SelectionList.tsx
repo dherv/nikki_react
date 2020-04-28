@@ -7,7 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../contexts/FirebaseContext";
 import FirebaseService from "../../firebase/firebase.module";
-import { ISelection } from "../../types/interfaces";
+import { ISelection, IDaily } from "../../types/interfaces";
 
 const drawerWidth = 240;
 
@@ -85,12 +85,15 @@ const SelectionList: FC<ResponsiveDrawerProps> = ({
   };
 
   useEffect(() => {
-    const callback = (type: string, data: ISelection, id: string) => {
-      const { text, translation } = data;
-      setListItems((prev) => [...prev, { title: translation, subtitle: text }]);
+    const callback = (docs: firebase.firestore.DocumentData[]) => {
+      const formattedDocs = docs.map((d) => {
+        const { translation, text } = d.data();
+        return { title: translation, subtitle: text };
+      });
+      setListItems(formattedDocs);
     };
-    db.snapshot("words", callback, ["dailyId", "==", id]);
-  }, []);
+    db.snapshot("words", callback, ["dailyId", "==", `dailies/${id}`]);
+  }, [id]);
 
   useEffect(() => {
     setMobileOpen(open);
