@@ -1,63 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Layout from "../components/layout/Layout";
-import { AsideRight, AsideRecentDailies } from "../components/layout/Asides";
-import { Main } from "../styled/GlobalComponents";
-import { IWord } from "../types/interfaces";
-import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
-import DotWithWord from "../components/ui/DotWithWord";
-import Api from "../api/Api";
-import Utils from "../utils/Utils";
+import FirebaseContext from "../contexts/FirebaseContext";
+import FirebaseService from "../firebase/firebase.module";
+import { List, ListItem, ListItemText } from "@material-ui/core";
 
 const Words = () => {
-  const [words, setWords] = useState<IWord[]>([]);
-
-  useEffect(() => {
-    Api.get("/words").then((data) => {
-      setWords(data);
-    });
-  }, []);
-
-  // const displayAsideLeft = () => <AsideLeftDefault />;
-  const displayAsideRight = () => <AsideRecentDailies />;
-  const displayListItemPanel = (itemDetails: IWord) => {
-    return (
-      <>
-        <p>{itemDetails.example}</p>
-        <p>
-          <span>Added on the {Utils.DateFormat(itemDetails.createdAt)}</span>
-          {/* <span>used {itemDetails.timesUsed} times</span> */}
-        </p>
-      </>
+  const [words, setWords] = useState<{ text: string; translation: string }[]>(
+    []
+  );
+  const db = useContext(FirebaseContext) as FirebaseService;
+  const callbackWords = (docs: firebase.firestore.DocumentData[]) => {
+    setWords(
+      docs.map((d) => {
+        const data = d.data();
+        const { text, translation } = data;
+        return { text, translation };
+      })
     );
   };
+  useEffect(() => {
+    db.snapshot("words", callbackWords);
+  }, []);
 
   return (
     <Layout title="words">
-      {/* <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft> */}
-      <Main>
-        <ul>
-          {words.length > 0 &&
-            words.map((w, i) => (
-              <MainListItemWithPanel
-                key={`${i}_${w.text}`}
-                itemIndex={i}
-                additionalText={w.translation}
-                itemDetails={w}
-                listItemContent={
-                  <DotWithWord
-                    typeOrColor="words"
-                    word={w.text}
-                    translation={w.translation}
-                  />
-                }
-                listItemPanelContent={displayListItemPanel(w)}
-              ></MainListItemWithPanel>
-            ))}
-        </ul>
-      </Main>
-      <AsideRight title="recent" subtitle="dailies">
-        {displayAsideRight()}
-      </AsideRight>
+      <List>
+        {words.map((w, i) => (
+          <ListItem>
+            <ListItemText primary={w.translation} secondary={w.text} />
+          </ListItem>
+        ))}
+      </List>
     </Layout>
   );
 };
