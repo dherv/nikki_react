@@ -84,14 +84,18 @@ const Dailies = () => {
 
   return (
     <Layout title="dailies">
-      <SC.List>
+      <List>
         {dailies.map((d, i) => (
-          <SC.ListItem onClick={() => handleOpenDialog(d)}>
-            <SC.ListItemTitle key={i}>{d.data.text}</SC.ListItemTitle>
-            <SC.ListItemSub>{d.data.date}</SC.ListItemSub>
-          </SC.ListItem>
+          <ListItem onClick={() => handleOpenDialog(d)}>
+            <ListItemText
+              primaryTypographyProps={{ noWrap: true }}
+              primary={d.data.text}
+              secondary={d.data.date}
+              style={{ width: "calc(100vw - 4rem)", maxWidth: 500 }}
+            ></ListItemText>
+          </ListItem>
         ))}
-      </SC.List>
+      </List>
       <Hidden smUp implementation="js">
         {dialogCurrentDaily ? (
           <Dialog
