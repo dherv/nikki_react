@@ -11,7 +11,6 @@ import { GlobalStyle } from "./styled/GlobalStyle";
 import Editor from "./pages/Editor";
 import Dailies from "./pages/Dailies";
 import Words from "./pages/Words";
-import Grammars from "./pages/Grammars";
 import Fallback from "./pages/Fallback";
 
 const App: React.FC = () => {
