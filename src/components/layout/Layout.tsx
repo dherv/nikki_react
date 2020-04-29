@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import styled from "styled-components";
 import NavMenu from "./NavMenu";
-import { MainTitle } from "../../styled/GlobalComponents";
+import { Typography } from "@material-ui/core";
 
 const Layout: React.FC<{
   title?: string;
@@ -57,7 +57,17 @@ const Layout: React.FC<{
       {render && render(listOpen, closeList())}
       <Navbar openDrawer={openDrawer()} toggleList={openList()}></Navbar>
       <Main>
-        {title ? <MainTitle>{title}</MainTitle> : null}
+        {title ? (
+          <Typography
+            style={{ padding: "0 1rem" }}
+            component="h4"
+            variant="h4"
+            color="primary"
+            gutterBottom
+          >
+            {title}
+          </Typography>
+        ) : null}
         <MainContainer>{children}</MainContainer>
       </Main>
     </Container>
