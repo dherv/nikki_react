@@ -87,8 +87,12 @@ const Container = styled.div`
 const Main = styled.main`
   grid-area: main
   margin-top: 4rem;
-  padding: 1rem 2rem;
+  padding: 1rem;
   overflow: auto
+  @media(min-width: 600px) {
+    padding: 1rem 2rem;
+  }
+
 `;
 const MainContainer = styled.div`
   display: flex;
