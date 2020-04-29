@@ -48,9 +48,8 @@ const Translater: FC<{
   const [currentFocus, setCurrentFocus] = useState<"source" | "target">(
     "source"
   );
-  const [isSearching, setIsSearching] = useState(false);
+  // const [isSearching, setIsSearching] = useState(false);
   const debounceText = useDebounce(textToTranslate, 500);
-  const [audio, setAudio] = useState<any>();
   const classes = useStyles();
   const targetLanguage = "ja-JP";
   const sourceLanguage = "en-US";
@@ -133,11 +132,9 @@ const Translater: FC<{
   };
 
   const handleAddToTextOnly = () => {
-    // check taht selection is not active
     if (!selection) {
       addToTextOnly(targetLanguageText);
     }
-    // add to text
   };
 
   const handleAddToTextAndSelection = (
@@ -166,21 +163,21 @@ const Translater: FC<{
     } else {
       setTargetLanguageText(translation);
     }
-  }, [translation]);
+  }, [currentFocus, translation]);
 
   useEffect(() => {
     if (debounceText) {
-      setIsSearching(true);
+      // setIsSearching(true);
       handleTranslation(textToTranslate, currentFocus).then(
         ({ translation }) => {
-          setIsSearching(false);
+          // setIsSearching(false);
           setTranslation(translation);
         }
       );
     } else {
       setTranslation("");
     }
-  }, [debounceText]);
+  }, [currentFocus, textToTranslate, debounceText]);
 
   return (
     <Card variant="outlined" className={classes.card}>
@@ -234,7 +231,6 @@ const TranslaterContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 100%;
-
   @media (max-width: 600px) {
     flex-direction: column;
   }

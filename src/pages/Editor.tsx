@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+} from "react";
 import Layout from "../components/layout/Layout";
 import styled from "styled-components";
 import { ISelection } from "../types/interfaces";
@@ -6,19 +12,12 @@ import FirebaseContext from "../contexts/FirebaseContext";
 import Translater from "../components/translater/Translater";
 import FirebaseService from "../firebase/firebase.module";
 import SelectionList from "../components/selection/SelectionList";
-import {
-  Hidden,
-  Dialog,
-  IconButton,
-  SnackbarContent,
-  Snackbar,
-} from "@material-ui/core";
+import { Hidden, Dialog, IconButton } from "@material-ui/core";
 import TranslateOutlinedIcon from "@material-ui/icons/TranslateOutlined";
 
 const Editor: React.FC = () => {
   const [text, setText] = useState<string>("");
   const [selection, setSelection] = useState<string>("");
-  const [saved, setSaved] = useState<ISelection[]>([]);
   const [showValidationErrorMessage, setShowValidationErrorMessage] = useState<
     boolean
   >(false);
@@ -65,8 +64,6 @@ const Editor: React.FC = () => {
       translation: targetText,
       dailyId: `dailies/${currentItemId}`,
     };
-    console.log({ toSave });
-
     // add to firebase with correct id
     db.addItem("words", toSave);
   };
@@ -76,26 +73,22 @@ const Editor: React.FC = () => {
   };
 
   const callbackAdd = (id: string) => {
-    // set current id
     setCurrentItemId(id);
   };
 
   const callbackUpdate = (document: any) => {
-    // update text and current id
     const data = document.data();
-    console.log(data);
     setCurrentItemId(document.id);
     setText(data.text);
   };
 
-  const checkDocumentOrCreate = () => {
-    // create doc if date does not exist yet
+  const checkDocumentOrCreate = useCallback(() => {
     db.checkDocumentOrCreate("dailies", text, callbackAdd, callbackUpdate);
-  };
+  }, [db, text]);
 
   useEffect(() => {
     return checkDocumentOrCreate();
-  }, []);
+  }, [checkDocumentOrCreate]);
 
   const clearDomSelection = () => {
     const currentSelection = window.getSelection
@@ -218,6 +211,7 @@ const TextAreaContainer = styled.div`
   height: 100%;
   margin-bottom: 16px;
 `;
+
 const TextArea = styled.textarea`
   padding: 0.5rem;
   width: 100%;
@@ -228,7 +222,6 @@ const TextArea = styled.textarea`
   resize: none;
   outline: none;
   line-height: 1.5;
-
   @media (min-width: 500px) {
     min-height: 100%;
     padding: 1rem;

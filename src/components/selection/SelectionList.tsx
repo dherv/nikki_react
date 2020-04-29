@@ -7,7 +7,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../contexts/FirebaseContext";
 import FirebaseService from "../../firebase/firebase.module";
-import { ISelection, IDaily } from "../../types/interfaces";
 
 const drawerWidth = 240;
 
@@ -70,7 +69,6 @@ const SelectionList: FC<ResponsiveDrawerProps> = ({
   open,
   closeList,
 }) => {
-  const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [listItems, setListItems] = useState<
     {
@@ -79,6 +77,7 @@ const SelectionList: FC<ResponsiveDrawerProps> = ({
     }[]
   >([]);
   const db = useContext(FirebaseContext) as FirebaseService;
+  const classes = useStyles();
 
   const handleDrawerToggle = (event: React.MouseEvent<HTMLDivElement>) => {
     closeList(event);
@@ -93,7 +92,7 @@ const SelectionList: FC<ResponsiveDrawerProps> = ({
       setListItems(formattedDocs);
     };
     db.snapshot("words", callback, ["dailyId", "==", `dailies/${id}`]);
-  }, [id]);
+  }, [db, id]);
 
   useEffect(() => {
     setMobileOpen(open);

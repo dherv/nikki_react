@@ -9,6 +9,7 @@ const Words = () => {
     []
   );
   const db = useContext(FirebaseContext) as FirebaseService;
+
   const callbackWords = (docs: firebase.firestore.DocumentData[]) => {
     setWords(
       docs.map((d) => {
@@ -20,7 +21,7 @@ const Words = () => {
   };
   useEffect(() => {
     db.snapshot("words", callbackWords);
-  }, []);
+  }, [db]);
 
   return (
     <Layout title="words">

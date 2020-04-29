@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogContent,
   Divider,
-  ListItem as ListItemMaterial,
   ListItemText,
   List,
   ListItem,
@@ -63,7 +62,7 @@ const Dailies = () => {
         `dailies/${dialogCurrentDaily.id}`,
       ]);
     }
-  }, [dialogCurrentDaily]);
+  }, [db, dialogCurrentDaily]);
 
   const content = dialogCurrentDaily ? (
     <List>
@@ -111,41 +110,15 @@ const Dailies = () => {
         ) : null}
       </Hidden>
       <Hidden smDown implementation="js">
-        <SC.ListContainer> {content}</SC.ListContainer>
+        <ListContainer> {content}</ListContainer>
       </Hidden>
     </Layout>
   );
 };
 
-const SC = {
-  List: styled.ul``,
-  ListContainer: styled.div`
-    margin: 0 auto;
-    width: 500px;
-  `,
-  ListItem: styled.li`
-    font-family: var(--font-text);
-    color: var(--font-color-title);
-    padding: 16px 24px;
-    border-radius: 50px;
-    &:hover {
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
-    }
-  `,
-
-  ListItemTitle: styled.h3`
-    max-width: 300px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-weight: 600;
-    margin-bottom: 4px;
-  `,
-
-  ListItemSub: styled.p`
-    color: var(--font-color-main);
-  `,
-};
+const ListContainer = styled.div`
+  margin: 0 auto;
+  width: 500px;
+`;
 
 export default Dailies;
