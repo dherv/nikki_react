@@ -12,6 +12,7 @@ import {
   ListItem as ListItemMaterial,
   ListItemText,
   List,
+  ListItem,
 } from "@material-ui/core";
 
 const Dailies = () => {
@@ -64,16 +65,33 @@ const Dailies = () => {
     }
   }, [dialogCurrentDaily]);
 
+  const content = dialogCurrentDaily ? (
+    <List>
+      <ListItem>
+        <ListItemText
+          primary={dialogCurrentDaily.data.text}
+          secondary={dialogCurrentDaily.data.date}
+        />
+      </ListItem>
+      <Divider />
+      {words.map((w) => (
+        <ListItem>
+          <ListItemText primary={w.translation} secondary={w.text} />
+        </ListItem>
+      ))}
+    </List>
+  ) : null;
+
   return (
     <Layout>
-      <ul>
+      <SC.List>
         {dailies.map((d, i) => (
-          <ListItem onClick={() => handleOpenDialog(d)}>
-            <ListItemTitle key={i}>{d.data.text}</ListItemTitle>
-            <ListItemSub>{d.data.date}</ListItemSub>
-          </ListItem>
+          <SC.ListItem onClick={() => handleOpenDialog(d)}>
+            <SC.ListItemTitle key={i}>{d.data.text}</SC.ListItemTitle>
+            <SC.ListItemSub>{d.data.date}</SC.ListItemSub>
+          </SC.ListItem>
         ))}
-      </ul>
+      </SC.List>
       <Hidden smUp implementation="js">
         {dialogCurrentDaily ? (
           <Dialog
@@ -84,51 +102,46 @@ const Dailies = () => {
             onBackdropClick={handleCloseDialog}
             transitionDuration={{ enter: 500, exit: 100 }}
           >
-            <DialogContent dividers>
-              <List>
-                <ListItemMaterial>
-                  <ListItemText
-                    primary={dialogCurrentDaily.data.text}
-                    secondary={dialogCurrentDaily.data.date}
-                  />
-                </ListItemMaterial>
-                <Divider />
-                {words.map((w) => (
-                  <ListItemMaterial>
-                    <ListItemText primary={w.translation} secondary={w.text} />
-                  </ListItemMaterial>
-                ))}
-              </List>
-            </DialogContent>
+            <DialogContent dividers>{content}</DialogContent>
           </Dialog>
         ) : null}
+      </Hidden>
+      <Hidden smDown implementation="js">
+        <SC.ListContainer> {content}</SC.ListContainer>
       </Hidden>
     </Layout>
   );
 };
 
-const ListItem = styled.li`
-  font-family: var(--font-text);
-  color: var(--font-color-title);
-  padding: 16px 24px;
-  border-radius: 50px;
-  &:hover {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-  }
-`;
+const SC = {
+  List: styled.ul``,
+  ListContainer: styled.div`
+    margin: 0 auto;
+    width: 500px;
+  `,
+  ListItem: styled.li`
+    font-family: var(--font-text);
+    color: var(--font-color-title);
+    padding: 16px 24px;
+    border-radius: 50px;
+    &:hover {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+    }
+  `,
 
-const ListItemTitle = styled.h3`
-  max-width: 300px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-weight: 600;
-  margin-bottom: 4px;
-`;
+  ListItemTitle: styled.h3`
+    max-width: 300px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: 600;
+    margin-bottom: 4px;
+  `,
 
-const ListItemSub = styled.p`
-  color: var(--font-color-main);
-`;
+  ListItemSub: styled.p`
+    color: var(--font-color-main);
+  `,
+};
 
 export default Dailies;
