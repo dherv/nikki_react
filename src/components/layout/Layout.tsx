@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import styled from "styled-components";
 import NavMenu from "./NavMenu";
+import { MainTitle } from "../../styled/GlobalComponents";
 
 const Layout: React.FC<{
+  title?: string;
   render?: (listOpen: any, closeList: any) => JSX.Element;
-}> = ({ children, render }) => {
+}> = ({ children, title, render }) => {
   const [drawerState, setDrawerState] = useState(false);
   const [listOpen, setListOpen] = useState(false);
 
@@ -55,6 +57,7 @@ const Layout: React.FC<{
       {render && render(listOpen, closeList())}
       <Navbar openDrawer={openDrawer()} toggleList={openList()}></Navbar>
       <Main>
+        {title ? <MainTitle>{title}</MainTitle> : null}
         <MainContainer>{children}</MainContainer>
       </Main>
     </Container>

@@ -27,7 +27,8 @@ export const Main = styled.main`
 
 export const MainTitle = styled.h2`
   font-size: 2rem;
-  border-bottom: 1px solid var(--font-color-title);
+  color: #347b9c;
+  font-weight: 600;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
 `;

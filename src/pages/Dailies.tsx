@@ -83,7 +83,7 @@ const Dailies = () => {
   ) : null;
 
   return (
-    <Layout>
+    <Layout title="dailies">
       <SC.List>
         {dailies.map((d, i) => (
           <SC.ListItem onClick={() => handleOpenDialog(d)}>

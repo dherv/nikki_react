@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/Layout";
 import { AsideRight, AsideRecentDailies } from "../components/layout/Asides";
-import { Main, MainTitle } from "../styled/GlobalComponents";
+import { Main } from "../styled/GlobalComponents";
 import { IWord } from "../types/interfaces";
 import MainListItemWithPanel from "../components/layout/MainListItemWithPanel";
 import DotWithWord from "../components/ui/DotWithWord";
@@ -12,7 +12,7 @@ const Words = () => {
   const [words, setWords] = useState<IWord[]>([]);
 
   useEffect(() => {
-    Api.get("/words").then(data => {
+    Api.get("/words").then((data) => {
       setWords(data);
     });
   }, []);
@@ -32,10 +32,9 @@ const Words = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="words">
       {/* <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft> */}
       <Main>
-        <MainTitle>Words</MainTitle>
         <ul>
           {words.length > 0 &&
             words.map((w, i) => (
