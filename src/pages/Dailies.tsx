@@ -1,95 +1,134 @@
 import React, { useState, useEffect, useContext } from "react";
 import Layout from "../components/layout/Layout";
-import { Main, MainTitle } from "../styled/GlobalComponents";
 import { IDaily } from "../types/interfaces";
 import FirebaseContext from "../contexts/FirebaseContext";
 import FirebaseService from "../firebase/firebase.module";
+import styled from "styled-components";
+import {
+  Hidden,
+  Dialog,
+  DialogContent,
+  Divider,
+  ListItem as ListItemMaterial,
+  ListItemText,
+  List,
+} from "@material-ui/core";
 
 const Dailies = () => {
-  const [dailies, setDailies] = useState<IDaily[]>([]);
+  const [dailies, setDailies] = useState<{ id: string; data: IDaily }[]>([]);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [dialogCurrentDaily, setDialogCurrentDaily] = useState<{
+    id: string;
+    data: IDaily;
+  } | null>();
+  const [words, setWords] = useState<{ text: string; translation: string }[]>(
+    []
+  );
   const db = useContext(FirebaseContext) as FirebaseService;
 
-  const callback = (type: string, data: IDaily, id: string) => {
-    if (type === "added") {
-      setDailies((prev) => [...prev, data]);
-    }
+  const handleOpenDialog = (d: { id: string; data: IDaily }) => {
+    setDialogCurrentDaily(d);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setDialogCurrentDaily(null);
+  };
+
+  const callbackDailies = (docs: firebase.firestore.DocumentData[]) => {
+    setDailies(docs.map((d) => ({ id: d.id, data: d.data() })));
+  };
+
+  const callbackWords = (docs: firebase.firestore.DocumentData[]) => {
+    setWords(
+      docs.map((d) => {
+        const data = d.data();
+        const { text, translation } = data;
+        return { text, translation };
+      })
+    );
   };
 
   useEffect(() => {
-    // const db = dbFactory(callback);
-    db.snapshot("dailies", callback);
+    db.snapshot("dailies", callbackDailies);
   }, [db]);
 
-  // useEffect(() => {
-  //   Api.get("/dailies").then((data: IDaily[]) => {
-  //     const dailies = data.map((d) => {
-  //       const { words, grammars } = d;
-  //       d.words = words.map((w) => {
-  //         w.type = "words";
-  //         return w;
-  //       });
-  //       d.grammars = grammars.map((g) => {
-  //         g.type = "grammars";
-  //         return g;
-  //       });
-  //       return d;
-  //     });
-  //     setDailies(dailies);
-  //   });
-  // }, []);
-
-  // const displayAsideLeft = () => <AsideLeftDefault />;
-  // const displayAsideRight = () => null;
-
-  // const displayListItemPanel = (itemDetails: IDaily) => (
-  //   <>
-  //     <p>{itemDetails.text}</p>
-  //     <StyledPanelList>
-  //       {[...itemDetails.words, ...itemDetails.grammars].map((w, i) => (
-  //         <StyledPanelListItem key={`${i}_${w.text}`}>
-  //           <DotWithWord
-  //             typeOrColor={w.type}
-  //             word={w.text}
-  //             translation={w.translation}
-  //           />
-  //         </StyledPanelListItem>
-  //       ))}
-  //     </StyledPanelList>
-  //   </>
-  // );
+  useEffect(() => {
+    if (dialogCurrentDaily) {
+      db.snapshot("words", callbackWords, [
+        "dailyId",
+        "==",
+        `dailies/${dialogCurrentDaily.id}`,
+      ]);
+    }
+  }, [dialogCurrentDaily]);
 
   return (
     <Layout>
-      {/* <AsideLeft title="tips">{displayAsideLeft()}</AsideLeft> */}
-      <Main>
-        <MainTitle>Dailies</MainTitle>
-        <ul>
-          {dailies.map((d, i) => (
-            <h5 key={i}>{d.text}</h5>
-            // <MainListItemWithPanel
-            //   key={`${i}_${d.id}`}
-            //   itemIndex={i}
-            //   additionalText={Utils.DateFormat(d.createdAt)}
-            //   itemDetails={d}
-            //   listItemPanelContent={displayListItemPanel(d)}
-            // ></MainListItemWithPanel>
-          ))}
-        </ul>
-      </Main>
-      {/* <AsideRight title="recent" subtitle="words and grammars">
-        {displayAsideRight()}
-      </AsideRight> */}
+      <ul>
+        {dailies.map((d, i) => (
+          <ListItem onClick={() => handleOpenDialog(d)}>
+            <ListItemTitle key={i}>{d.data.text}</ListItemTitle>
+            <ListItemSub>{d.data.date}</ListItemSub>
+          </ListItem>
+        ))}
+      </ul>
+      <Hidden smUp implementation="js">
+        {dialogCurrentDaily ? (
+          <Dialog
+            aria-labelledby="simple-dialog-title"
+            open={openDialog}
+            maxWidth="xl"
+            fullWidth={true}
+            onBackdropClick={handleCloseDialog}
+            transitionDuration={{ enter: 500, exit: 100 }}
+          >
+            <DialogContent dividers>
+              <List>
+                <ListItemMaterial>
+                  <ListItemText
+                    primary={dialogCurrentDaily.data.text}
+                    secondary={dialogCurrentDaily.data.date}
+                  />
+                </ListItemMaterial>
+                <Divider />
+                {words.map((w) => (
+                  <ListItemMaterial>
+                    <ListItemText primary={w.translation} secondary={w.text} />
+                  </ListItemMaterial>
+                ))}
+              </List>
+            </DialogContent>
+          </Dialog>
+        ) : null}
+      </Hidden>
     </Layout>
   );
 };
 
-// const StyledPanelList = styled.ul`
-//   margin: 2rem 0;
-// `;
-// const StyledPanelListItem = styled.li`
-//   display: flex;
-//   align-items: center;
-//   margin: 1rem 0;
-// `;
+const ListItem = styled.li`
+  font-family: var(--font-text);
+  color: var(--font-color-title);
+  padding: 16px 24px;
+  border-radius: 50px;
+  &:hover {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+`;
+
+const ListItemTitle = styled.h3`
+  max-width: 300px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: 600;
+  margin-bottom: 4px;
+`;
+
+const ListItemSub = styled.p`
+  color: var(--font-color-main);
+`;
 
 export default Dailies;

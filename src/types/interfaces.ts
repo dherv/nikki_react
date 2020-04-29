@@ -38,4 +38,5 @@ export interface IDaily {
   updatedAt: string;
   words: IWord[];
   grammars: IGrammar[];
+  date: string;
 }

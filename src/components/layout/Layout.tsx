@@ -74,7 +74,7 @@ const Container = styled.div`
 const Main = styled.main`
   grid-area: main
   margin-top: 4rem;
-  padding: 1rem;
+  padding: 1rem 2rem;
   overflow: auto
 `;
 const MainContainer = styled.div`
