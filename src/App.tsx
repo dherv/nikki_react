@@ -13,7 +13,7 @@ import Dailies from "./pages/Dailies";
 import Words from "./pages/Words";
 import Fallback from "./pages/Fallback";
 import Auth from "./pages/Auth";
-import PrivateRoute from "./router/ProtectedRoute";
+import PrivateRoute from "./router/PrivateRoute";
 
 const App: React.FC = () => {
   return (
