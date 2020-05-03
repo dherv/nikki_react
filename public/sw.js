@@ -15,13 +15,7 @@ const assets = [
 ];
 
 // routes from react router that should fallback to fallback page if offline and page not in dynamic cache
-const routes = [
-  "http://localhost:3000/",
-  "http://localhost:3000/index.html",
-  "http://localhost:3000/editor",
-  "http://localhost:3000/dailies",
-  "http://localhost:3000/words",
-];
+const routes = ["/", "/index.html", "/editor", "/dailies", "/words", "/login"];
 
 // cache size limit function
 const limitCacheSize = (name, size) => {
@@ -64,7 +58,8 @@ self.addEventListener("fetch", (event) => {
   // prevent cache anything coming from firestore
   if (
     event.request.url.indexOf("firestore.googleapis.com") === -1 &&
-    event.request.url.indexOf("api") === -1
+    event.request.url.indexOf("api") === -1 &&
+    event.request.url.indexOf("auth") === -1
   ) {
     event.respondWith(
       caches
@@ -82,8 +77,8 @@ self.addEventListener("fetch", (event) => {
           );
         })
         .catch(() => {
-          console.log(event.request.url);
-          if (routes.includes(event.request.url)) {
+          if (routes.includes(event.request.referrer)) {
+            console.log("GET FROM CACHE FALLBACK");
             return caches.match("/fallback");
           }
         })

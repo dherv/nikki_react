@@ -1,6 +1,11 @@
 import * as firebase from "firebase/app";
-import firebaseConfig from "./firebase.config";
+import { firebaseDevConfig, firebaseProdConfig } from "./firebase.config";
 import "firebase/firestore";
+
+const firebaseConfig =
+  process.env.NODE_ENV === "production"
+    ? firebaseProdConfig
+    : firebaseDevConfig;
 
 class FirebaseService {
   private readonly app: firebase.app.App;
